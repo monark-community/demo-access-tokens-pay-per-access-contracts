@@ -3,14 +3,23 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Wallet, Menu, X, User, Settings, LogOut } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const navigate = useNavigate();
 
   const handleWalletConnect = () => {
-    setIsWalletConnected(!isWalletConnected);
+    if (isWalletConnected) {
+      // Disconnecting - redirect to homepage
+      setIsWalletConnected(false);
+      navigate('/');
+    } else {
+      // Connecting - redirect to dashboard
+      setIsWalletConnected(true);
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -24,7 +33,7 @@ const Header = () => {
             <span className="text-white font-bold text-xl">GatePay</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-8 flex-1">
+          <nav className="hidden md:flex items-center space-x-8 flex-1 ml-12">
             <Link to="/pricing" className="text-gray-300 hover:text-white transition-colors">
               Pricing
             </Link>
@@ -58,7 +67,10 @@ const Header = () => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem 
-                    onClick={() => setIsWalletConnected(false)}
+                    onClick={() => {
+                      setIsWalletConnected(false);
+                      navigate('/');
+                    }}
                     className="text-red-400 hover:bg-red-500/10 cursor-pointer"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
