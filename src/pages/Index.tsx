@@ -3,7 +3,7 @@ import React from 'react';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import Features from '../components/Features';
-import AssetMarketplace from '../components/AssetMarketplace';
+// import AssetMarketplace from '../components/AssetMarketplace';
 import Footer from '../components/Footer';
 
 const Index = () => {
@@ -12,7 +12,7 @@ const Index = () => {
       <Header />
       <Hero />
       <Features />
-      <AssetMarketplace />
+      {/* <AssetMarketplace /> */}
       <Footer />
     </div>
   );
