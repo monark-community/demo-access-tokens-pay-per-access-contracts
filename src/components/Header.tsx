@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Wallet, Menu, X } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Wallet, Menu, X, User, Settings, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
@@ -14,7 +15,7 @@ const Header = () => {
 
   return (
     <header className="relative z-50 bg-black/20 backdrop-blur-md border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-blue-500 rounded-lg flex items-center justify-center">
@@ -23,7 +24,7 @@ const Header = () => {
             <span className="text-white font-bold text-xl">GatePay</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8 flex-1">
             <Link to="/pricing" className="text-gray-300 hover:text-white transition-colors">
               Pricing
             </Link>
@@ -36,17 +37,44 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button
-              onClick={handleWalletConnect}
-              className={`${
-                isWalletConnected
-                  ? 'bg-green-600 hover:bg-green-700'
-                  : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700'
-              } text-white`}
-            >
-              <Wallet className="w-4 h-4 mr-2" />
-              {isWalletConnected ? 'Connected' : 'Connect Wallet'}
-            </Button>
+            {isWalletConnected ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="bg-green-600 hover:bg-green-700 text-white">
+                    <User className="w-4 h-4 mr-2" />
+                    0x1234...5678
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-slate-800 border-white/10">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="text-white hover:bg-white/10 cursor-pointer">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-white hover:bg-white/10 cursor-pointer">
+                    <User className="w-4 h-4 mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem 
+                    onClick={() => setIsWalletConnected(false)}
+                    className="text-red-400 hover:bg-red-500/10 cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Disconnect
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                onClick={handleWalletConnect}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+              >
+                <Wallet className="w-4 h-4 mr-2" />
+                Dashboard
+              </Button>
+            )}
           </div>
 
           <div className="md:hidden">
@@ -82,7 +110,7 @@ const Header = () => {
                 } text-white w-full`}
               >
                 <Wallet className="w-4 h-4 mr-2" />
-                {isWalletConnected ? 'Connected' : 'Connect Wallet'}
+                {isWalletConnected ? 'Dashboard' : 'Dashboard'}
               </Button>
             </nav>
           </div>
