@@ -53,7 +53,7 @@ Three benefits, as outcomes:
 - **Subheadline:** "GatePay turns a token payment into a pass with rules: how long it lasts, how many times it opens. Doors, streams and files check the pass on-chain, and lock again when it runs out."
   FR: « GatePay transforme un paiement en jetons en laissez-passer avec des règles : combien de temps il dure, combien de fois il ouvre. Portes, diffusions et fichiers le vérifient on-chain, puis se referment quand il est épuisé. »
 - **Primary CTA:** "Try the demo" → `/{locale}/app`. FR « Essayer la démo ».
-- **Secondary CTA:** "How a pass works" → `/{locale}/how-it-works`. FR « Comment fonctionne un laissez-passer ».
+- **Secondary CTA:** "How a pass works" → `/{locale}/how-it-works`. FR « Comment ça marche » (shorter than a literal translation, so the two buttons sit side by side).
 - **Hero visual: the product itself**, drawn in code. A "gate plate" for *Studio B · rehearsal room* (status LOCKED/OPEN, a live-looking countdown) with a brass pass stub clipped to it (2 h, 24 tUSDC, code `GP-4K7Q-2M`) and three lines of gateway tape underneath (`payment seen`, `pass verified`, `door.unlock → 200 OK`). It shows rule, pass and door in one glance, which a photo or illustration can't. The plate flips from LOCKED to OPEN once on load (disabled with reduced motion).
 
 ## 4. Page map
@@ -75,7 +75,7 @@ All routes live under `/{locale}` (`en`, `fr`); `/` redirects to the visitor's p
 
 **Why each extra page exists.** `/how-it-works` serves the tertiary audience the documentation targets (students building the contract and the gateway); without it the home page would have to carry payloads and event names. `/credits` is required to credit photographers. There is no `/use-cases`: the four photo cards and the demo gates already cover streams, files, rooms, lockers and alerts.
 
-**Header:** GatePay mark + wordmark (home) · links "Demo" (`/app`), "How it works" · EN/FR switch · theme toggle · primary pill "Try the demo". Inside `/app` the header action becomes the wallet (`connect-wallet`) and a "Demo · simulated data" badge sits next to the logo; the app has its own sub-navigation: Passes · Console · Gateway, plus "Demo controls".
+**Header:** GatePay mark + wordmark (home) · links "Demo" (`/app`), "How it works" · EN/FR switch · theme toggle · primary pill "Try the demo". Inside `/app` the header action becomes the wallet (`connect-wallet`); the demo's own bar carries the sub-navigation (Passes · Console · Gateway), the "Demo · simulated data" badge and "Demo controls".
 **Mobile:** mark + menu button opening a full-height sheet with the links, switches and action. App sub-navigation becomes a sticky bottom bar.
 **Footer:** one-line description · links (Demo, How it works, Credits) · "Demo · simulated data" · "Testnet demo · not financial advice · no real funds" · "Built with Monark" credit · project documentation and GitHub links · © year GatePay.
 
@@ -110,7 +110,7 @@ Tone: **plain, concrete, a little dry.** Written for operators first (studio man
 | Eyebrow | Pay-per-access passes | Laissez-passer à l'accès |
 | H1 | Sell access by the hour, the use, or forever. | Vendez l'accès à l'heure, à l'usage ou pour de bon. |
 | Sub | GatePay turns a token payment into a pass with rules: how long it lasts, how many times it opens. Doors, streams and files check the pass on-chain, and lock again when it runs out. | GatePay transforme un paiement en jetons en laissez-passer avec des règles : combien de temps il dure, combien de fois il ouvre. Portes, diffusions et fichiers le vérifient on-chain, puis se referment quand il est épuisé. |
-| CTAs | Try the demo · How a pass works | Essayer la démo · Comment fonctionne un laissez-passer |
+| CTAs | Try the demo · How a pass works | Essayer la démo · Comment ça marche |
 | "Three ways" H2 | Three ways to sell access | Trois façons de vendre l'accès |
 | Intro | Every gate has one rule. The rule decides what a payment buys. | Chaque accès a une règle. La règle décide de ce qu'un paiement achète. |
 | Time pass | **Time pass.** 48 hours of the rooftop session and its replay. The pass counts down and locks at the end. | **Laissez-passer à durée.** 48 heures de la session sur le toit et de sa rediffusion. Il se décompte et se verrouille à la fin. |
@@ -273,6 +273,16 @@ Credits: `/credits` page linked from the footer.
 | **Network** | Custom (from $400 / month) | from 0.75% | Multi-site operators, campuses, municipalities: SLA, self-hosted gateway, audit support |
 
 Buyers pay the network fee (fractions of a cent on an L2). Break-even between Open and Venue is ~$3,500 of monthly sales ($49 ÷ 1.4 points), roughly one $12-an-hour room booked ten hours a day; below that, Open is cheaper. `/pricing` is built as a real page for internal review only: **never linked**, excluded from `sitemap.xml`, and `robots: { index: false, follow: false }`. No other page mentions prices of GatePay itself.
+
+## Decisions taken while building
+
+- **Three seats, one demo.** The visitor's demo wallet buys and uses passes (`/app`). The console (`/app/console`) is the view of a separate simulated operator wallet, *Harbour Street Works*, which owns Studio B, Tool locker 14, the Rooftop session and the notice board; its transactions are signed "as the operator" in the wallet prompt. The gateway (`/app/gateway`) is the door's view. This keeps "buy two hours of Studio B" natural (you are not buying from yourself).
+- **Seeded world** (deterministic): six gates (room, locker, stream, video course, document in tDAI, paid notice board), 19 passes including the visitor's live stream pass (31 h left), a locker pass with 2 of 5 opens, and an expired course pass. Demo wallet balance: 40 tUSDC, 20 tDAI, 0.02 tETH, so buying 2 hours (24 tUSDC) works and then 4 more hours shows the insufficient-balance state.
+- **Gate page order.** On phones the order is gate → your pass / buy → access → activity; on desktop the pass and the tape sit in the right column.
+- **Toasts** are only used for cross-page news (a gate published, top-up, reset); transaction states are always inline next to the button. Desktop: top-right under the header. Phones: top-centre under the header, clear of the bottom tab bar and of the lists they report on.
+- **Mobile header**: logo and menu button; the sheet holds the links, EN/FR, theme and the action (the wallet inside the demo). The demo's sections move to a bottom tab bar.
+- **Gateway door checks** at `/app/gateway` are read-only (they don't consume a use); using a pass from its gate page does.
+- **Registry components**: `connect-wallet` was installed by hand from its registry JSON because the shadcn CLI resolved its `wallet` dependency against the default registry. `token-amount` was patched to use the locale's decimal separator; `tx-status` was re-toned to the GatePay palette.
 
 ## 11. Out of scope
 
