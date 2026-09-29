@@ -163,6 +163,12 @@
   p {
     text-wrap: pretty;
   }
+  /* The demo's bottom tab bar (phones) must never hide the footer. */
+  @media (width < 48rem) {
+    body:has([data-app-frame]) {
+      padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+    }
+  }
   ::selection {
     background: var(--accent);
     color: var(--accent-foreground);

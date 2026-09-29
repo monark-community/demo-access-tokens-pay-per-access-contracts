@@ -18,6 +18,7 @@ const fr: Dictionary = {
     tryDemo: "Essayer la démo",
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
+    close: "Fermer",
     menu: "Menu",
     toggleTheme: "Passer au thème clair ou sombre",
     language: "Langue",
@@ -338,7 +339,7 @@ const fr: Dictionary = {
         "L'accès à l'unité vit de petits paiements. Des frais fixes de carte coûtent 18 % d'une vente à 2 $ ; un pourcentage dans le contrat la garde à 2,9 %.",
         "Les exploitants ne paient rien avant de vendre : un groupe ou une chercheuse peut l'essayer le temps d'une sortie.",
         "L'abonnement se trouve là où sont les coûts : les lieux physiques ont besoin d'appareils branchés, de journaux plus longs et d'exports.",
-        "Le seuil de rentabilité entre Open et Venue tourne autour de 3 500 $ de ventes par mois, soit un local loué une dizaine d'heures par semaine.",
+        "Le seuil de rentabilité entre Open et Venue tourne autour de 3 500 $ de ventes par mois, soit une salle à 12 $ l'heure réservée dix heures par jour. En dessous, Open coûte moins cher.",
         "L'acheteur ne paie que les frais de réseau, des fractions de cent sur une L2.",
       ],
     },
@@ -477,7 +478,7 @@ const fr: Dictionary = {
     },
     use: {
       checking: "Vérification du laissez-passer on-chain…",
-      granted: "Laissez-passer vérifié",
+      granted: "Laissez-passer vérifié on-chain au bloc {block}",
       denied: {
         expired: "Laissez-passer expiré le {date}. Renouvelez pour entrer.",
         spent: "Plus aucun usage sur ce laissez-passer.",
@@ -545,6 +546,7 @@ const fr: Dictionary = {
       pausePrompt: "Suspendre les ventes de {gate}",
       resumePrompt: "Reprendre les ventes de {gate}",
       pauseLine: "Les laissez-passer existants restent valides",
+      effect: "Effet",
       holders: "Détenteurs",
       holdersOf: "Détenteurs de {gate}",
       noHolders: "Personne ne détient encore de laissez-passer pour cet accès.",

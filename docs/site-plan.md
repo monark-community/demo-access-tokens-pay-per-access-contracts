@@ -272,7 +272,7 @@ Credits: `/credits` page linked from the footer.
 | **Venue** | $49 / month | 1.5% | Studios, makerspaces, co-working: unlimited devices and webhooks, broadcast alerts, 13-month logs and CSV export, team roles, custom domain |
 | **Network** | Custom (from $400 / month) | from 0.75% | Multi-site operators, campuses, municipalities: SLA, self-hosted gateway, audit support |
 
-Buyers pay the network fee (fractions of a cent on an L2). Break-even between Open and Venue is ~$3,500 of monthly sales, roughly one rehearsal room rented 10 hours a week. `/pricing` is built as a real page for internal review only: **never linked**, excluded from `sitemap.xml`, and `robots: { index: false, follow: false }`. No other page mentions prices of GatePay itself.
+Buyers pay the network fee (fractions of a cent on an L2). Break-even between Open and Venue is ~$3,500 of monthly sales ($49 ÷ 1.4 points), roughly one $12-an-hour room booked ten hours a day; below that, Open is cheaper. `/pricing` is built as a real page for internal review only: **never linked**, excluded from `sitemap.xml`, and `robots: { index: false, follow: false }`. No other page mentions prices of GatePay itself.
 
 ## 11. Out of scope
 

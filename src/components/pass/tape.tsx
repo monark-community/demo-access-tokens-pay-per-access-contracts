@@ -63,7 +63,7 @@ export function Tape({
   const [initial] = useState(() => new Set(events.map((e) => e.id)))
   const byId = new Map(gates.map((g) => [g.id, g]))
   const shown = events.slice(0, limit)
-  const today = formatDate(now || Date.now(), locale)
+  const today = now ? formatDate(now, locale) : ""
 
   return (
     <div className={cn("rounded-md border bg-card font-mono text-[0.74rem] leading-relaxed", className)}>

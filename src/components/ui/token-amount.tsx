@@ -26,8 +26,11 @@ function formatBaseUnits(
     .padStart(decimals, "0")
     .slice(0, maxFractionDigits)
     .replace(/0+$/, "")
+  // GatePay patch: use the locale's decimal separator (fr-CA writes 12,5).
+  const decimal =
+    new Intl.NumberFormat(locale).formatToParts(1.5).find((p) => p.type === "decimal")?.value ?? "."
   return fracStr
-    ? `${negative ? "-" : ""}${wholeStr}.${fracStr}`
+    ? `${negative ? "-" : ""}${wholeStr}${decimal}${fracStr}`
     : `${negative ? "-" : ""}${wholeStr}`
 }
 

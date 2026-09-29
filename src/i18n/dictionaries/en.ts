@@ -17,6 +17,7 @@ const en = {
     tryDemo: "Try the demo",
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    close: "Close",
     menu: "Menu",
     toggleTheme: "Switch light or dark theme",
     language: "Language",
@@ -333,7 +334,7 @@ const en = {
         "Pay-per-access lives on small payments. A fixed card fee makes a $2 sale cost 18%; a percentage in the contract keeps it at 2.9%.",
         "Operators pay nothing until they sell, so a band or a researcher can try it for one release.",
         "The subscription is where the cost is: physical venues need device connections, longer logs and exports.",
-        "Break-even between Open and Venue is about $3,500 of monthly sales, roughly one rehearsal room rented ten hours a week.",
+        "Break-even between Open and Venue is about $3,500 of monthly sales, roughly one $12-an-hour room booked ten hours a day. Below that, Open is cheaper.",
         "Buyers pay only the network fee, fractions of a cent on an L2.",
       ],
     },
@@ -471,7 +472,7 @@ const en = {
     },
     use: {
       checking: "Checking your pass on-chain…",
-      granted: "Pass verified",
+      granted: "Pass verified on-chain at block {block}",
       denied: {
         expired: "Pass expired {date}. Renew to get back in.",
         spent: "No uses left on this pass.",
@@ -539,6 +540,7 @@ const en = {
       pausePrompt: "Pause sales on {gate}",
       resumePrompt: "Resume sales on {gate}",
       pauseLine: "Existing passes keep working",
+      effect: "Effect",
       holders: "Holders",
       holdersOf: "Holders of {gate}",
       noHolders: "Nobody holds a pass for this gate yet.",
