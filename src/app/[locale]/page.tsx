@@ -47,8 +47,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       <section className="border-b">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-12 pb-16 sm:px-6 md:pt-20 md:pb-24 lg:grid-cols-[1fr_1.05fr]">
           <div>
-            <p className="label-mono text-primary">{h.eyebrow}</p>
-            <h1 className="mt-4 text-[2.5rem] leading-[1.02] font-extrabold tracking-[-0.035em] sm:text-6xl lg:text-[4.1rem]">
+            <h1 className="text-[2.5rem] leading-[1.02] font-extrabold tracking-[-0.035em] sm:text-6xl lg:text-[4.1rem]">
               {h.title}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">{h.sub}</p>
@@ -63,7 +62,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <Link href={href(locale, "/how-it-works")}>{h.ctaSecondary}</Link>
               </Button>
             </div>
-            <p className="mt-5 font-mono text-xs text-muted-foreground">{h.heroNote}</p>
           </div>
           <HeroGate dict={d} />
         </div>
@@ -75,7 +73,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           <h2 id="ways" className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
             {h.ways.title}
           </h2>
-          <p className="mt-3 text-lg text-muted-foreground">{h.ways.intro}</p>
         </div>
         <ul className="mt-10 grid gap-5 md:grid-cols-3">
           {ways.map((w, i) => (
@@ -108,7 +105,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             <h2 id="steps" className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
               {h.steps.title}
             </h2>
-            <p className="mt-3 text-lg text-muted-foreground">{h.steps.intro}</p>
           </div>
           <ol className="relative mt-12 grid gap-8 md:grid-cols-4 md:gap-6">
             <span aria-hidden="true" className="perforation-x absolute top-5 right-[12%] left-[12%] hidden md:block" />
@@ -136,7 +132,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           <h2 id="places" className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
             {h.places.title}
           </h2>
-          <p className="mt-3 text-lg text-muted-foreground">{h.places.intro}</p>
         </div>
         <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {PLACES.map((p) => {
@@ -173,24 +168,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         </ul>
       </section>
 
-      {/* Benefits --------------------------------------------------------- */}
-      <section className="border-y bg-plate text-plate-foreground dark:bg-[#0b100e] dark:text-foreground" aria-labelledby="benefits">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-24">
-          <h2 id="benefits" className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
-            {h.benefits.title}
-          </h2>
-          <ol className="mt-10 grid gap-10 md:grid-cols-3">
-            {h.benefits.items.map((b, i) => (
-              <li key={b.title} className="border-t border-dashed border-plate-foreground/35 pt-6">
-                <span className="font-mono text-sm opacity-75">0{i + 1}</span>
-                <h3 className="mt-2 text-xl leading-snug font-bold">{b.title}</h3>
-                <p className="mt-2 opacity-80">{b.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
       {/* FAQ ---------------------------------------------------------------- */}
       <section className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-[1fr_1.6fr] md:py-24" aria-labelledby="faq">
         <h2 id="faq" className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
@@ -209,10 +186,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       {/* Closing ------------------------------------------------------------ */}
       <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
         <div className="ticket flex flex-col items-start gap-6 rounded-lg bg-stub px-6 py-10 text-stub-foreground sm:px-12 md:flex-row md:items-center md:justify-between" style={{ ["--notch" as string]: "14px" }}>
-          <div className="max-w-xl">
-            <h2 className="text-2xl font-extrabold tracking-[-0.02em] sm:text-3xl">{h.closing.title}</h2>
-            <p className="mt-2 opacity-85">{h.closing.body}</p>
-          </div>
+          <h2 className="max-w-xl text-2xl font-extrabold tracking-[-0.02em] sm:text-3xl">{h.closing.title}</h2>
           <Button asChild size="lg">
             <Link href={href(locale, "/app/gate/studio-b")}>
               {h.closing.cta}

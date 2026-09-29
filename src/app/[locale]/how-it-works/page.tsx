@@ -1,7 +1,8 @@
-import { ArrowRight, CornerDownLeft } from "lucide-react"
+import { ArrowRight, ChevronDown, CornerDownLeft } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import type { ReactNode } from "react"
 
 import { Button } from "@/components/ui/button"
 import { href, isLocale } from "@/i18n/config"
@@ -58,8 +59,7 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
     <>
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 pt-12 pb-14 sm:px-6 md:pt-16">
-          <p className="label-mono text-primary">{h.eyebrow}</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-extrabold tracking-[-0.035em] sm:text-5xl">{h.title}</h1>
+          <h1 className="max-w-3xl text-4xl font-extrabold tracking-[-0.035em] sm:text-5xl">{h.title}</h1>
           <p className="mt-5 max-w-2xl text-lg text-muted-foreground">{h.intro}</p>
         </div>
       </section>
@@ -143,9 +143,11 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
           <p className="mt-3 text-muted-foreground">{h.records.intro}</p>
           <p className="mt-4 rounded-md bg-stub p-3 text-sm text-stub-foreground">{h.records.note}</p>
         </div>
-        <pre className="min-w-0 overflow-x-auto rounded-md bg-plate p-5 font-mono text-[0.78rem] leading-relaxed text-plate-foreground">
-          <code>{EVENTS}</code>
-        </pre>
+        <Disclosure label={h.records.show}>
+          <pre className="overflow-x-auto rounded-md bg-plate p-5 font-mono text-[0.78rem] leading-relaxed text-plate-foreground" tabIndex={0}>
+            <code>{EVENTS}</code>
+          </pre>
+        </Disclosure>
       </section>
 
       {/* Gateway ------------------------------------------------------------ */}
@@ -165,13 +167,13 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
               ))}
             </ol>
           </div>
-          <div className="min-w-0">
+          <Disclosure label={h.gateway.show}>
             <h3 className="label-mono text-muted-foreground">{h.gateway.payloadTitle}</h3>
-            <pre className="mt-3 overflow-x-auto rounded-md bg-plate p-5 font-mono text-[0.78rem] leading-relaxed text-plate-foreground">
+            <pre className="mt-3 overflow-x-auto rounded-md bg-plate p-5 font-mono text-[0.78rem] leading-relaxed text-plate-foreground" tabIndex={0}>
               <code>{PAYLOAD}</code>
             </pre>
             <p className="mt-3 text-sm text-muted-foreground">{h.gateway.payloadNote}</p>
-          </div>
+          </Disclosure>
         </div>
       </section>
 
@@ -194,7 +196,6 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
         </div>
         <div className="ticket self-start rounded-lg bg-stub p-8 text-stub-foreground" style={{ ["--notch" as string]: "12px" }}>
           <h2 className="text-2xl font-extrabold">{h.cta.title}</h2>
-          <p className="mt-2 opacity-85">{h.cta.body}</p>
           <Button asChild size="lg" className="mt-6">
             <Link href={href(locale, "/app")}>
               {h.cta.button}
@@ -204,5 +205,18 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
         </div>
       </section>
     </>
+  )
+}
+
+/** Code on demand: a native disclosure, closed by default. */
+function Disclosure({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <details className="group min-w-0 self-start">
+      <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md border bg-card px-4 text-sm font-semibold transition-colors hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+        {label}
+        <ChevronDown className="size-4 transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
+      </summary>
+      <div className="mt-4">{children}</div>
+    </details>
   )
 }

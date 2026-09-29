@@ -46,6 +46,7 @@ export function Tape({
   showGate = false,
   empty,
   limit = 40,
+  more,
   className,
   label,
 }: {
@@ -57,12 +58,15 @@ export function Tape({
   showGate?: boolean
   empty: string
   limit?: number
+  /** "Show more" label; when set, the tape pages by `limit` instead of cutting off. */
+  more?: string
   className?: string
   label: string
 }) {
   const [initial] = useState(() => new Set(events.map((e) => e.id)))
+  const [pages, setPages] = useState(1)
   const byId = new Map(gates.map((g) => [g.id, g]))
-  const shown = events.slice(0, limit)
+  const shown = events.slice(0, limit * pages)
   const today = now ? formatDate(now, locale) : ""
 
   return (
@@ -104,6 +108,15 @@ export function Tape({
             )
           })}
         </ol>
+      )}
+      {more && events.length > shown.length && (
+        <button
+          type="button"
+          onClick={() => setPages((n) => n + 1)}
+          className="block min-h-10 w-full border-t border-dashed px-3.5 py-2 text-center font-sans text-sm font-semibold text-primary hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+        >
+          {more}
+        </button>
       )}
     </div>
   )

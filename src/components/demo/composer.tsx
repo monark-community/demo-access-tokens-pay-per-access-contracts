@@ -152,7 +152,7 @@ export function Composer() {
         {dict.app.console.title}
       </Link>
       <div className="mt-4">
-        <PageHead seat={dict.app.seats.console} title={c.title} intro={c.intro} />
+        <PageHead seat={dict.app.seats.console} title={c.title} />
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">

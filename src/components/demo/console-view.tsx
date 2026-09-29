@@ -21,10 +21,12 @@ import { cn } from "@/lib/utils"
 import { Amount } from "./amount"
 import { useApp } from "./app-provider"
 import { GateCover } from "./gate-cover"
-import { ruleSentence } from "./gate-text"
+import { priceLine } from "./gate-text"
 import { PageHead } from "./page-head"
 import { ViewSkeleton } from "./passes-view"
 import { TxFeedback } from "./tx-feedback"
+
+const HOLDERS_PAGE = 5
 
 const stateTone: Record<PassState, string> = {
   active: "text-primary",
@@ -40,6 +42,7 @@ export function ConsoleView() {
   const demo = useDemo()
   const now = useNow()
   const [selected, setSelected] = useState<string | null>(null)
+  const [holderLimit, setHolderLimit] = useState(HOLDERS_PAGE)
 
   if (!demo || !now) return <ViewSkeleton />
 
@@ -61,7 +64,6 @@ export function ConsoleView() {
       <PageHead
         seat={dict.app.seats.console}
         title={c.title}
-        intro={c.intro}
         actions={
           <Button asChild>
             <Link href={href(locale, "/app/console/new")}>
@@ -72,9 +74,8 @@ export function ConsoleView() {
         }
       />
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-6">
         <Wallet address={demo.operator.address} name={demo.operator.name} showCopy={false} />
-        <span className="text-xs text-muted-foreground">{dict.app.wallet.operatorRole}</span>
       </div>
 
       <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg border bg-border lg:grid-cols-4">
@@ -119,7 +120,10 @@ export function ConsoleView() {
                 gate={gate}
                 active={passes.filter((p) => p.gateId === gate.id && isUsable(p, now)).length}
                 selected={current?.id === gate.id}
-                onSelect={() => setSelected(gate.id)}
+                onSelect={() => {
+                  setSelected(gate.id)
+                  setHolderLimit(HOLDERS_PAGE)
+                }}
               />
             ))}
           </ul>
@@ -137,10 +141,10 @@ export function ConsoleView() {
             if (rows.length === 0) return <p className="mt-4 rounded-lg border border-dashed p-6 text-center text-muted-foreground">{c.noHolders}</p>
             return (
               <div className="mt-4 overflow-x-auto rounded-lg border bg-card">
-                <table className="w-full min-w-[640px] text-sm">
+                <table className="w-full min-w-[520px] text-sm">
                   <thead>
                     <tr className="border-b text-left">
-                      {[c.columns.holder, c.columns.pass, c.columns.bought, c.columns.state, c.columns.ends].map((h) => (
+                      {[c.columns.holder, c.columns.pass, c.columns.state, c.columns.ends].map((h) => (
                         <th key={h} scope="col" className="label-mono px-4 py-3 font-medium text-muted-foreground">
                           {h}
                         </th>
@@ -148,7 +152,7 @@ export function ConsoleView() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-dashed">
-                    {rows.map((p) => {
+                    {rows.slice(0, holderLimit).map((p) => {
                       const st = passState(p, now)
                       return (
                         <tr key={p.code}>
@@ -159,7 +163,6 @@ export function ConsoleView() {
                             </span>
                           </td>
                           <td className="px-4 py-2.5 font-mono text-xs">{p.code}</td>
-                          <td className="px-4 py-2.5 text-muted-foreground">{formatDateTime(p.purchasedAt, locale)}</td>
                           <td className={cn("px-4 py-2.5 font-semibold", stateTone[st])}>{c.states[st]}</td>
                           <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">
                             {p.expiresAt !== null
@@ -173,6 +176,13 @@ export function ConsoleView() {
                     })}
                   </tbody>
                 </table>
+                {rows.length > holderLimit && (
+                  <div className="border-t border-dashed p-2 text-center">
+                    <Button variant="ghost" size="sm" onClick={() => setHolderLimit((n) => n + HOLDERS_PAGE)}>
+                      {dict.common.showMore}
+                    </Button>
+                  </div>
+                )}
               </div>
             )
           })()}
@@ -211,7 +221,7 @@ function GateRow({ gate, active, selected, onSelect }: { gate: Gate; active: num
           </p>
           <p className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
             <KindIcon kind={gate.kind} className="size-3.5" />
-            {ruleSentence(gate, dict, locale)}
+            {priceLine(gate, dict, locale)}
           </p>
         </div>
       </div>

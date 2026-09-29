@@ -50,8 +50,9 @@ Three benefits, as outcomes:
 
 - **Headline (9 words):** "Sell access by the hour, the use, or forever."
   FR: « Vendez l'accès à l'heure, à l'usage ou pour de bon. »
-- **Subheadline:** "GatePay turns a token payment into a pass with rules: how long it lasts, how many times it opens. Doors, streams and files check the pass on-chain, and lock again when it runs out."
-  FR: « GatePay transforme un paiement en jetons en laissez-passer avec des règles : combien de temps il dure, combien de fois il ouvre. Portes, diffusions et fichiers le vérifient on-chain, puis se referment quand il est épuisé. »
+- **Subheadline (18 words):** "Buyers pay once. The pass opens a door, a stream or a file, then locks when it runs out."
+  FR: « On paie une fois. Le laissez-passer ouvre une porte, une diffusion ou un fichier, puis se referme à la fin. »
+- No eyebrow and no note under the buttons (simplification pass, see `docs/simplification.md`).
 - **Primary CTA:** "Try the demo" → `/{locale}/app`. FR « Essayer la démo ».
 - **Secondary CTA:** "How a pass works" → `/{locale}/how-it-works`. FR « Comment ça marche » (shorter than a literal translation, so the two buttons sit side by side).
 - **Hero visual: the product itself**, drawn in code. A "gate plate" for *Studio B · rehearsal room* (status LOCKED/OPEN, a live-looking countdown) with a brass pass stub clipped to it (2 h, 24 tUSDC, code `GP-4K7Q-2M`) and three lines of gateway tape underneath (`payment seen`, `pass verified`, `door.unlock → 200 OK`). It shows rule, pass and door in one glance, which a photo or illustration can't. The plate flips from LOCKED to OPEN once on load (disabled with reduced motion).
@@ -62,22 +63,22 @@ All routes live under `/{locale}` (`en`, `fr`); `/` redirects to the visitor's p
 
 | Route | Purpose | Sections, in order |
 |-|-|-|
-| `/` | Explain the idea in 30 seconds and push into the demo | Hero with gate plate · "Three ways to sell access" (time / metered / forever stubs) · "From payment to open door" (4 steps + gateway tape) · "Where gates live" (4 photos, each linked to its demo gate) · Benefits (3 outcomes) · FAQ · Closing CTA |
-| `/app` | Visitor view of the demo: browse gates and hold passes | Wallet gate (when disconnected) · "Your passes" rail (active, running low, expired) · Catalogue of gates with filters by kind · empty states |
-| `/app/gate/[id]` | One gate: buy, use, renew | Cover + rule sentence · Buy panel (units, total, balance, disclaimer) · Your pass (stub, countdown/uses, Use button, Renew) · Access result (door, player, document or alert) · Recent activity for this gate |
-| `/app/console` | Operator view: gates you own | Revenue and passes summary · Your gates (status, sold, active, revenue, pause/resume) · Holders of the selected gate |
+| `/` | Explain the idea in 30 seconds and push into the demo | Hero with gate plate · "Three ways to sell access" (time / metered / forever stubs) · "From payment to open door" (4 steps) · "Where gates live" (4 photos, each linked to its demo gate) · FAQ (4 questions) · Closing CTA. Five sections after the hero. |
+| `/app` | Visitor view of the demo: browse gates and hold passes | Wallet gate (when disconnected) · "Your passes" rail (active, running low, expired) · Catalogue of gates (kind · mode, title, price) with filters by kind · empty states |
+| `/app/gate/[id]` | One gate: buy, use, renew | Cover + rule sentence · Buy panel (units, total, balance) · Your pass (stub, countdown/uses, Use button, Renew) · Access result (door, player, document or alert) · Recent activity for this gate (5 lines + "Show more") |
+| `/app/console` | Operator view: gates you own | Revenue and passes summary · Your gates (status, price, sold, active, revenue, pause/resume) · Holders of the selected gate (5 rows + "Show more") |
 | `/app/console/new` | Publish a gate with the rule builder | Kind · Title and description · Rule sentence (access type, price, token, duration or uses, max units) · Gateway action (reveal, play, webhook URL, broadcast) · Live stub preview · Publish |
-| `/app/gateway` | What the gateway sees | Door check (pick gate, enter pass code, check) · Access tape (all events, filter by gate, empty state) |
-| `/how-it-works` | Mechanics for developers and students | Lifecycle diagram · The rule (fields) · What the contract records (events) · What the gateway does (verification rules + webhook payload) · Expiry and renewal · CTA to the demo |
+| `/app/gateway` | What the gateway sees | Title with an info tip ("What is the gateway?") · Door check (pick gate, enter pass code, check) · Access tape (8 events + "Show more", filter by gate, empty state) |
+| `/how-it-works` | Mechanics for developers and students | Lifecycle diagram · The rule (fields) · What the contract records (events behind "Show the contract events") · What the gateway does (5 steps; webhook payload behind "Show the webhook payload") · Where it can go next + CTA to the demo |
 | `/credits` | Photo credits (required by the asset rules) | Photographers and links · "Built with Monark" |
 | `/pricing` | **Internal strategy review only.** Unlinked, `noindex, nofollow`, not in the sitemap | Model · three plans · fee maths on a $2, $24 and $180 sale · reasoning |
 | 404 | Localized not found | Locked gate illustration · links home and to the demo |
 
 **Why each extra page exists.** `/how-it-works` serves the tertiary audience the documentation targets (students building the contract and the gateway); without it the home page would have to carry payloads and event names. `/credits` is required to credit photographers. There is no `/use-cases`: the four photo cards and the demo gates already cover streams, files, rooms, lockers and alerts.
 
-**Header:** GatePay mark + wordmark (home) · links "Demo" (`/app`), "How it works" · EN/FR switch · theme toggle · primary pill "Try the demo". Inside `/app` the header action becomes the wallet (`connect-wallet`); the demo's own bar carries the sub-navigation (Passes · Console · Gateway), the "Demo · simulated data" badge and "Demo controls".
+**Header:** GatePay mark + wordmark (home) · links "Demo" (`/app`), "How it works" · EN/FR switch · theme toggle · primary pill "Try the demo". Inside `/app` the header action becomes the wallet (`connect-wallet`); the demo's own single bar carries the sub-navigation (Passes · Console · Gateway) and "Demo controls" (the separate "Demo · simulated data" badge was removed: the footer carries it). Marketing pages have exactly one top bar, the header.
 **Mobile:** mark + menu button opening a full-height sheet with the links, switches and action. App sub-navigation becomes a sticky bottom bar.
-**Footer:** one-line description · links (Demo, How it works, Credits) · "Demo · simulated data" · "Testnet demo · not financial advice · no real funds" · "Built with Monark" credit · project documentation and GitHub links · © year GatePay.
+**Footer:** one-line description · links (Demo, How it works, Credits) · "Demo · simulated data" · "Built with Monark" credit · project documentation and GitHub links · © year GatePay. The testnet line lives only in the wallet prompt.
 
 ## 5. Feature highlights
 
@@ -107,46 +108,42 @@ Tone: **plain, concrete, a little dry.** Written for operators first (studio man
 
 | Section | EN | FR |
 |-|-|-|
-| Eyebrow | Pay-per-access passes | Laissez-passer à l'accès |
 | H1 | Sell access by the hour, the use, or forever. | Vendez l'accès à l'heure, à l'usage ou pour de bon. |
-| Sub | GatePay turns a token payment into a pass with rules: how long it lasts, how many times it opens. Doors, streams and files check the pass on-chain, and lock again when it runs out. | GatePay transforme un paiement en jetons en laissez-passer avec des règles : combien de temps il dure, combien de fois il ouvre. Portes, diffusions et fichiers le vérifient on-chain, puis se referment quand il est épuisé. |
+| Sub | Buyers pay once. The pass opens a door, a stream or a file, then locks when it runs out. | On paie une fois. Le laissez-passer ouvre une porte, une diffusion ou un fichier, puis se referme à la fin. |
 | CTAs | Try the demo · How a pass works | Essayer la démo · Comment ça marche |
 | "Three ways" H2 | Three ways to sell access | Trois façons de vendre l'accès |
-| Intro | Every gate has one rule. The rule decides what a payment buys. | Chaque accès a une règle. La règle décide de ce qu'un paiement achète. |
-| Time pass | **Time pass.** 48 hours of the rooftop session and its replay. The pass counts down and locks at the end. | **Laissez-passer à durée.** 48 heures de la session sur le toit et de sa rediffusion. Il se décompte et se verrouille à la fin. |
-| Metered | **Metered pass.** Five opens of Locker 14. Each open uses one; at zero, the locker stays shut. | **Laissez-passer à l'usage.** Cinq ouvertures du casier 14. Chaque ouverture en consomme une ; à zéro, le casier reste fermé. |
-| Forever | **Keep forever.** The Lowwater Report, paid once, readable any time from the same wallet. | **Pour de bon.** Le rapport Lowwater, payé une fois, lisible en tout temps depuis le même portefeuille. |
+| Time pass | **Time pass** · Rooftop session · 48 h. Counts down, then locks at the end. | **À durée** · Session sur le toit · 48 h. Se décompte, puis se verrouille à la fin. |
+| Metered | **Metered pass** · Tool locker 14 · 5 opens. Each open uses one. At zero, it stays shut. | **À l'usage** · Casier à outils 14 · 5 ouvertures. Chaque ouverture en consomme une. À zéro, il reste fermé. |
+| Forever | **Keep forever** · The Lowwater Report. Paid once, readable any time. | **Pour de bon** · Le rapport Lowwater. Payé une fois, lisible en tout temps. |
 | Steps H2 | From payment to open door | Du paiement à la porte ouverte |
-| Step 1 | **Set the rule.** Price, token, and what one unit buys: an hour, five opens, or the file for good. | **Fixez la règle.** Prix, jeton et ce qu'achète une unité : une heure, cinq ouvertures ou le fichier pour de bon. |
-| Step 2 | **They pay from a wallet.** One transaction, no account. The contract records the pass. | **On paie depuis un portefeuille.** Une transaction, aucun compte. Le contrat enregistre le laissez-passer. |
-| Step 3 | **The gateway checks.** At the door, the player or the page, it reads the pass on-chain before doing anything. | **La passerelle vérifie.** À la porte, au lecteur ou sur la page, elle lit le laissez-passer on-chain avant d'agir. |
-| Step 4 | **It locks again.** When time or uses run out, access stops. Renewing is one more payment. | **Ça se referme.** Quand le temps ou les usages sont épuisés, l'accès s'arrête. Renouveler, c'est un paiement de plus. |
+| Step 1 | **Set the rule.** Price, token, and what one unit buys. | **Fixez la règle.** Prix, jeton et ce qu'achète une unité. |
+| Step 2 | **They pay from a wallet.** One transaction, no account. | **On paie depuis un portefeuille.** Une transaction, aucun compte. |
+| Step 3 | **The gateway checks.** It reads the pass on-chain before opening. | **La passerelle vérifie.** Elle lit le laissez-passer on-chain avant d'ouvrir. |
+| Step 4 | **It locks again.** When time or uses run out, access stops. | **Ça se referme.** Temps ou usages épuisés : l'accès s'arrête. |
 | Places H2 | Where gates live | Là où vivent les accès |
 | Cards | A rehearsal room rented by the hour · A livestream with a 48-hour replay · A course sold for 30 days · A locker paid per open | Un local de répétition loué à l'heure · Une diffusion en direct avec 48 h de rediffusion · Un cours vendu pour 30 jours · Un casier payé à l'ouverture |
-| Benefits H2 | What changes for you | Ce qui change pour vous |
-| Benefit 1 | **Every hour and every open gets paid, even the $2 ones.** No fixed card fee eating small sales. | **Chaque heure et chaque ouverture sont payées, même à 2 $.** Aucuns frais fixes de carte qui mangent les petites ventes. |
-| Benefit 2 | **Nobody gets in on an expired pass.** The pass carries its own end. You never change a door code again. | **Personne n'entre avec un laissez-passer expiré.** Il porte sa propre échéance. Fini de changer le code de la porte. |
-| Benefit 3 | **Buyers pay once and walk in.** No account, no subscription to cancel, a countdown they can see. | **On paie une fois et on entre.** Aucun compte, aucun abonnement à résilier, un décompte bien visible. |
-| Closing | Two hours of Studio B are waiting. Buy them with test tokens and open the door. · Open the demo | Deux heures au studio B vous attendent. Achetez-les en jetons de test et ouvrez la porte. · Ouvrir la démo |
+| Closing | Two hours of Studio B are waiting. · Open the demo | Deux heures au studio B vous attendent. · Ouvrir la démo |
+
+The "What changes for you" benefits band was removed in the simplification pass: it restated the hero ("pay once"), the steps ("it locks again") and the three ways. The value proposition in section 2 still stands.
 
 ### FAQ
 
+Four questions, home page only; answers ≤ 15 words. "Can a pass be shared?" became the "Transferable passes" line under "Where it can go next" on `/how-it-works`; "Is any of this real money?" is answered by the footer's "Demo · simulated data" and the wallet prompt's testnet line.
+
 | EN | FR |
 |-|-|
-| **Do buyers need an account?** No. The wallet that paid is the proof. The pass is tied to that address, and the gateway checks it there. | **Faut-il un compte pour acheter ?** Non. Le portefeuille qui a payé fait foi. Le laissez-passer est lié à cette adresse et la passerelle la vérifie. |
-| **What happens when a pass runs out?** The gateway refuses it and says why: expired on a date, or no uses left. Renewing extends from the old end date, so nobody loses time by paying early. | **Que se passe-t-il quand un laissez-passer est épuisé ?** La passerelle le refuse et explique pourquoi : expiré à telle date ou plus d'usages. Le renouvellement repart de l'ancienne échéance ; payer d'avance ne fait rien perdre. |
-| **Can it open a real door?** Yes, through the gateway. It calls your lock's webhook (`door.unlock`) only after the on-chain check passes. In this demo the door is simulated. | **Est-ce que ça ouvre une vraie porte ?** Oui, par la passerelle. Elle appelle le webhook de votre serrure (`door.unlock`) seulement après la vérification on-chain. Ici, la porte est simulée. |
-| **Can a pass be shared?** A pass belongs to the address that paid. Operators can allow transfer per gate; this demo keeps passes non-transferable. | **Peut-on partager un laissez-passer ?** Il appartient à l'adresse qui a payé. L'exploitant peut permettre le transfert par accès ; cette démo les garde non transférables. |
-| **Which tokens can I charge in?** Any token the gate allows. The demo uses test tokens: tUSDC, tDAI and tETH on a testnet. | **Dans quels jetons puis-je facturer ?** Ceux que l'accès autorise. La démo utilise des jetons de test : tUSDC, tDAI et tETH sur un réseau de test. |
-| **Is any of this real money?** No. Everything here is simulated: the wallet, the network, the payments and the doors. | **Est-ce du vrai argent ?** Non. Tout est simulé ici : le portefeuille, le réseau, les paiements et les portes. |
+| **Do buyers need an account?** No. The wallet that paid is the proof, and the gateway checks it. | **Faut-il un compte pour acheter ?** Non. Le portefeuille qui a payé fait foi, et la passerelle le vérifie. |
+| **What happens when a pass runs out?** The gateway refuses it and says why. Renewing extends from the old end date. | **Que se passe-t-il quand un laissez-passer est épuisé ?** La passerelle le refuse et dit pourquoi. Le renouvellement repart de l'ancienne échéance. |
+| **Can it open a real door?** Yes. The gateway calls your lock's webhook only after the on-chain check. | **Est-ce que ça ouvre une vraie porte ?** Oui. La passerelle appelle le webhook de votre serrure après la vérification on-chain. |
+| **Which tokens can I charge in?** Any token the gate allows. The demo uses test tUSDC, tDAI and tETH. | **Dans quels jetons puis-je facturer ?** Ceux que l'accès autorise. La démo utilise tUSDC, tDAI et tETH de test. |
 
 ### App: key strings, empty and error states
 
 | Where | EN | FR |
 |-|-|-|
-| Wallet gate | Connect the demo wallet to buy and use passes. It's simulated: no extension, no real funds. | Connectez le portefeuille de démo pour acheter et utiliser des laissez-passer. Tout est simulé : aucune extension, aucun vrai fonds. |
+| Wallet gate | Connect the demo wallet · Simulated: no extension, no real funds. | Connecter le portefeuille de démo · Simulé : aucune extension, aucun vrai fonds. |
 | Connect rejected | You declined the connection request. Nothing was shared. | Vous avez refusé la demande de connexion. Rien n'a été partagé. |
-| No passes | No passes yet. Pick a gate below and buy one with test tokens. | Aucun laissez-passer pour l'instant. Choisissez un accès ci-dessous et payez en jetons de test. |
+| No passes | No passes yet. Pick a gate below. | Aucun laissez-passer. Choisissez un accès ci-dessous. |
 | Filter empty | No gates of this kind yet. | Aucun accès de ce type pour l'instant. |
 | Pending | Waiting for the network… | En attente du réseau… |
 | Rejected | You declined. Nothing was charged. | Vous avez refusé. Rien n'a été prélevé. |
@@ -163,7 +160,9 @@ Tone: **plain, concrete, a little dry.** Written for operators first (studio man
 | Page error | Something jammed. Try again, or reset the demo. | Quelque chose s'est coincé. Réessayez ou réinitialisez la démo. |
 | 404 | This door doesn't exist. The page you asked for isn't here. | Cette porte n'existe pas. La page demandée n'est pas ici. |
 
-Disclaimers everywhere value moves: "Testnet demo · not financial advice · no real funds" / « Démo sur réseau de test · pas un conseil financier · aucun vrai fonds ». Site-wide: "Demo · simulated data" / « Démo · données simulées ». Credit: "Built with Monark" / « Propulsé par Monark ».
+App pages have no intro paragraphs: each view keeps its seat eyebrow ("You, as a visitor", "Harbour Street Works, as the operator", "The gateway at the door") and its title. The gateway's explanation sits behind an info tip next to the title.
+
+Disclaimers: "Testnet demo · not financial advice · no real funds" / « Démo sur réseau de test · pas un conseil financier · aucun vrai fonds » appears once per transaction, in the wallet prompt only (not on the buy panel or in the footer). Site-wide, in the footer: "Demo · simulated data" / « Démo · données simulées ». Credit: "Built with Monark" / « Propulsé par Monark ».
 
 ## 8. Aesthetics
 
@@ -283,6 +282,8 @@ Buyers pay the network fee (fractions of a cent on an L2). Break-even between Op
 - **Mobile header**: logo and menu button; the sheet holds the links, EN/FR, theme and the action (the wallet inside the demo). The demo's sections move to a bottom tab bar.
 - **Gateway door checks** at `/app/gateway` are read-only (they don't consume a use); using a pass from its gate page does.
 - **Registry components**: `connect-wallet` was installed by hand from its registry JSON because the shadcn CLI resolved its `wallet` dependency against the default registry. `token-amount` was patched to use the locale's decimal separator; `tx-status` was re-toned to the GatePay palette.
+
+- **Simplification pass** (owner feedback: "too loaded"): see `docs/simplification.md` for the before/after word counts and every cut. New shared pieces: `src/components/ui/info-tip.tsx` (popover behind an info icon), a "Show more" pager on the access tape (`Tape more=…`) and on the console's holders table, and native disclosures for code on `/how-it-works`.
 
 ## 11. Out of scope
 

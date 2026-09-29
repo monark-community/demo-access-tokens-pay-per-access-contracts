@@ -7,6 +7,7 @@ import { Plate } from "@/components/pass/plate"
 import { Tape } from "@/components/pass/tape"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { InfoTip } from "@/components/ui/info-tip"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { WalletAddress } from "@/components/ui/wallet"
@@ -59,7 +60,15 @@ export function GatewayView() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:py-10">
-      <PageHead seat={dict.app.seats.gateway} title={w.title} intro={w.intro} />
+      <PageHead
+        seat={dict.app.seats.gateway}
+        title={w.title}
+        info={
+          <InfoTip label={w.aboutLabel}>
+            <p>{w.about}</p>
+          </InfoTip>
+        }
+      />
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[400px_minmax(0,1fr)]">
         <section aria-labelledby="check" className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
@@ -234,7 +243,8 @@ export function GatewayView() {
             now={now}
             showGate={filter === "all"}
             empty={w.tapeEmpty}
-            limit={30}
+            limit={8}
+            more={dict.common.showMore}
             label={w.tapeTitle}
             className="mt-4"
           />

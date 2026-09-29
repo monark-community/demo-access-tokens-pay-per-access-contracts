@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 
-import { isLocale, MONARK_URL } from "@/i18n/config"
+import { isLocale } from "@/i18n/config"
 import { getDictionary, t } from "@/i18n"
 import { pageMetadata } from "@/lib/metadata"
 import { PHOTOS } from "@/lib/photos"
@@ -50,12 +50,6 @@ export default async function CreditsPage({ params }: PageProps<"/[locale]/credi
           </li>
         ))}
       </ul>
-      <p className="mt-10 text-sm text-muted-foreground">
-        {c.built}{" "}
-        <a className={link} href={MONARK_URL}>
-          {d.common.builtWith}
-        </a>
-      </p>
     </div>
   )
 }

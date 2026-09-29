@@ -106,7 +106,7 @@ async function toggleFail(page, v) {
 async function buyStudio(page, v, withFailure) {
   const t = L[v.locale]
   await go(page, v, "/app/gate/studio-b")
-  await page.getByRole("button", { name: t.more }).click()
+  await page.getByRole("button", { name: t.more, exact: true }).click()
   await page.waitForTimeout(200)
   await shot(page, v, "flow2-01-gate-2-hours", true)
   if (withFailure) await toggleFail(page, v)
@@ -169,7 +169,7 @@ async function appFlows(page, v) {
 
   // Flow 2 failure: not enough balance for 4 more hours.
   await page.getByRole("button", { name: "Renew" }).first().click()
-  const more = page.getByRole("button", { name: t.more })
+  const more = page.getByRole("button", { name: t.more, exact: true })
   for (let i = 0; i < 3; i++) await more.click()
   await page.getByText(/Not enough tUSDC/).waitFor()
   await center(page.getByText(/Not enough tUSDC/))

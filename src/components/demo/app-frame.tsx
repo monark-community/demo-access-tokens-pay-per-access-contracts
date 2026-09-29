@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
 import { useApp } from "./app-provider"
 import { DemoControls } from "./demo-controls"
 
-/** Demo chrome: section tabs (bottom bar on phones), demo badge, demo controls. */
+/** Demo chrome: one bar with the section tabs (bottom bar on phones) and demo controls. */
 export function AppFrame({ children }: { children: ReactNode }) {
   const { dict, locale } = useApp()
   const n = dict.app.nav
@@ -48,11 +48,7 @@ export function AppFrame({ children }: { children: ReactNode }) {
               ))}
             </ul>
           </nav>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-brass/60 px-2.5 py-1 font-mono text-[0.68rem] font-medium text-brass md:ml-auto">
-            <span className="size-1.5 rounded-full bg-brass" aria-hidden="true" />
-            {dict.common.demoBadge}
-          </span>
-          <DemoControls className="ml-auto md:ml-0" />
+          <DemoControls className="ml-auto" />
         </div>
         {!storageOk && (
           <p className="border-t bg-muted px-4 py-2 text-center text-xs text-muted-foreground">{dict.app.controls.storageOff}</p>

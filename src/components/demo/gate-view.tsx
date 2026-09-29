@@ -141,7 +141,7 @@ export function GateView({ id }: { id: string }) {
             <h2 id="activity" className="mb-3 text-lg font-bold">
               {g.activity}
             </h2>
-            <Tape events={events} gates={demo.gates} dict={dict} locale={locale} now={now} empty={g.activityEmpty} limit={7} label={g.activity} />
+            <Tape events={events} gates={demo.gates} dict={dict} locale={locale} now={now} empty={g.activityEmpty} limit={5} more={dict.common.showMore} label={g.activity} />
           </section>
         </div>
 
@@ -156,7 +156,7 @@ export function GateView({ id }: { id: string }) {
           <h2 id="activity-m" className="mb-3 text-lg font-bold">
             {g.activity}
           </h2>
-          <Tape events={events} gates={demo.gates} dict={dict} locale={locale} now={now} empty={g.activityEmpty} limit={7} label={g.activity} />
+          <Tape events={events} gates={demo.gates} dict={dict} locale={locale} now={now} empty={g.activityEmpty} limit={5} more={dict.common.showMore} label={g.activity} />
         </section>
       </div>
     </div>

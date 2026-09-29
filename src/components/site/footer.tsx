@@ -59,10 +59,6 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-5 text-[13px] text-muted-foreground sm:px-6 md:flex-row md:flex-wrap md:items-center md:gap-x-6">
           <span>{t(f.rights, { year })}</span>
           <span className="font-mono text-xs">{c.demoBadge}</span>
-          <span className="font-mono text-xs">{c.testnet}</span>
-          <Link className={link} href={href(locale, "/credits")}>
-            {f.photos}
-          </Link>
           <a className={`${link} md:ml-auto`} href={MONARK_URL}>
             {c.builtWith}
           </a>

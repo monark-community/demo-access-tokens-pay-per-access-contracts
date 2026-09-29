@@ -42,7 +42,7 @@ export function PassesView() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:py-10">
-      <PageHead seat={dict.app.seats.passes} title={p.title} intro={p.intro} />
+      <PageHead seat={dict.app.seats.passes} title={p.title} />
 
       <section aria-labelledby="yours" className="mt-8">
         <div className="flex flex-wrap items-end justify-between gap-3">
@@ -141,7 +141,6 @@ export function PassesView() {
                         {dict.kinds[gate.kind]} · {dict.modes[gate.rule.mode]}
                       </p>
                       <h3 className="text-lg leading-snug font-bold">{gate.title}</h3>
-                      <p className="text-sm text-muted-foreground">{gate.place}</p>
                       <div className="mt-auto flex items-center justify-between gap-3 pt-3">
                         <span className="font-mono text-sm font-semibold">{priceLine(gate, dict, locale)}</span>
                         <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-primary transition-transform group-hover:translate-x-0.5" />

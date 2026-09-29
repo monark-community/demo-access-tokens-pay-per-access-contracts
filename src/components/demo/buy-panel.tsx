@@ -1,6 +1,6 @@
 "use client"
 
-import { Minus, Plus, ShieldAlert } from "lucide-react"
+import { Minus, Plus } from "lucide-react"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -152,10 +152,6 @@ export function BuyPanel({
             success={tx.phase === "confirmed" ? (renew ? g.renewed : g.purchased) : undefined}
             className="mt-4"
           />
-          <p className="mt-4 flex items-start gap-1.5 text-xs text-muted-foreground">
-            <ShieldAlert className="mt-px size-3.5 shrink-0" aria-hidden="true" />
-            {dict.common.testnet}
-          </p>
         </>
       )}
     </div>
