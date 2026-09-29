@@ -56,7 +56,7 @@ export function PassStub({
       style={{ ["--stub-w" as string]: `${STUB_W}px` }}
     >
       <div
-        className="ticket-h grid min-h-[132px] grid-cols-[minmax(0,1fr)_var(--stub-w)] bg-stub text-stub-foreground"
+        className="ticket-h grid h-full min-h-[132px] grid-cols-[minmax(0,1fr)_var(--stub-w)] bg-stub text-stub-foreground"
         style={{ ["--notch-at" as string]: `calc(100% - ${STUB_W}px)` }}
       >
         <div className={cn("flex min-w-0 flex-col gap-1 p-4 pr-5", dead && "opacity-60")}>
@@ -93,7 +93,7 @@ export function PassStub({
       {stamp && (
         <span
           aria-hidden="true"
-          className="gp-stamp pointer-events-none absolute top-1/2 right-6 -translate-y-1/2 rounded-sm border-[2.5px] border-rust px-2 py-0.5 font-mono text-sm font-semibold tracking-[0.18em] text-rust uppercase"
+          className="gp-stamp pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 rounded-sm border-[2.5px] border-rust bg-stub px-2 py-0.5 font-mono text-sm font-semibold tracking-[0.18em] text-rust uppercase"
         >
           {stamp}
         </span>

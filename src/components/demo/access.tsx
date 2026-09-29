@@ -188,8 +188,8 @@ function StreamAccess({ gate, pass, now, onRenew }: AccessProps) {
         )}
         {playing ? (
           <>
-            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-sm bg-destructive px-2 py-0.5 font-mono text-[0.68rem] font-semibold tracking-widest text-white uppercase">
-              <span className="gp-blink size-1.5 rounded-full bg-white" aria-hidden="true" />
+            <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-sm bg-destructive px-2 py-0.5 font-mono text-[0.68rem] font-semibold tracking-widest text-destructive-foreground uppercase">
+              <span className="gp-blink size-1.5 rounded-full bg-current" aria-hidden="true" />
               {s.playing}
             </span>
             <span className="absolute top-3 right-3 rounded-sm bg-black/70 px-2 py-0.5 font-mono text-[0.7rem] text-white">

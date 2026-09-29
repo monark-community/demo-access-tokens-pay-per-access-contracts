@@ -75,9 +75,9 @@ export function PassesView() {
                 <li key={pass.code}>
                   <Link
                     href={href(locale, `/app/gate/${gate.id}`)}
-                    className="block rounded-[8px] transition-transform hover:-translate-y-0.5 focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none"
+                    className="block h-full rounded-[8px] transition-transform hover:-translate-y-0.5 focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none"
                   >
-                    <PassCard pass={pass} gate={gate} now={now} />
+                    <PassCard pass={pass} gate={gate} now={now} className="h-full" />
                   </Link>
                 </li>
               )

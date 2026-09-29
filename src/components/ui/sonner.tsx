@@ -20,8 +20,9 @@ function useDesktop() {
 }
 
 /**
- * Toasts never sit on the content they report on: top-right below the header
- * on desktop, bottom-centre above the demo's bottom bar on phones.
+ * Toasts never sit on the content they report on (new gates appear in lists
+ * below, transactions report inline): top-right below the header on desktop,
+ * top-centre just below the header on phones, clear of the bottom tab bar.
  */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { resolvedTheme = "light" } = useTheme()
@@ -31,9 +32,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={resolvedTheme as ToasterProps["theme"]}
       className="toaster group"
-      position={desktop ? "top-right" : "bottom-center"}
+      position={desktop ? "top-right" : "top-center"}
       offset={{ top: 80, right: 24 }}
-      mobileOffset={{ bottom: 92, left: 16, right: 16 }}
+      mobileOffset={{ top: 72, left: 16, right: 16 }}
       icons={{
         success: <CircleCheckIcon className="size-4 text-primary" />,
         info: <InfoIcon className="size-4" />,

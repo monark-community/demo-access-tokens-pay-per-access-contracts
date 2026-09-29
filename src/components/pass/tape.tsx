@@ -83,11 +83,21 @@ export function Tape({
                   {day !== today && <span className="mr-1">{day}</span>}
                   {formatClock(e.at, locale)}
                 </time>
-                <span className={cn("min-w-0 break-words", tone[e.type])}>
+                <span className={cn("min-w-0", tone[e.type])}>
                   <span aria-hidden="true" className="mr-1.5 inline-block w-3 text-center">
                     {mark[e.type]}
                   </span>
-                  {tapeText(e, gate, dict, locale)}
+                  {tapeText(e, gate, dict, locale)
+                    .split(/(GP-[A-Z0-9]{4}-[A-Z0-9]{2})/)
+                    .map((part, i) =>
+                      i % 2 ? (
+                        <span key={i} className="whitespace-nowrap">
+                          {part}
+                        </span>
+                      ) : (
+                        part
+                      )
+                    )}
                   {showGate && gate && <span className="block truncate text-muted-foreground">{gate.title}</span>}
                 </span>
               </li>

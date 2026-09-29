@@ -45,7 +45,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
     <>
       {/* Hero ------------------------------------------------------------ */}
       <section className="border-b">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-12 pb-16 sm:px-6 md:pt-20 md:pb-24 lg:grid-cols-[1.05fr_1fr]">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-12 pb-16 sm:px-6 md:pt-20 md:pb-24 lg:grid-cols-[1fr_1.05fr]">
           <div>
             <p className="label-mono text-primary">{h.eyebrow}</p>
             <h1 className="mt-4 text-[2.5rem] leading-[1.02] font-extrabold tracking-[-0.035em] sm:text-6xl lg:text-[4.1rem]">
@@ -174,7 +174,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       </section>
 
       {/* Benefits --------------------------------------------------------- */}
-      <section className="border-y bg-plate text-plate-foreground" aria-labelledby="benefits">
+      <section className="border-y bg-plate text-plate-foreground dark:bg-[#0b100e] dark:text-foreground" aria-labelledby="benefits">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 md:py-24">
           <h2 id="benefits" className="text-3xl font-extrabold tracking-[-0.03em] sm:text-4xl">
             {h.benefits.title}

@@ -234,7 +234,7 @@ export function GatewayView() {
             now={now}
             showGate={filter === "all"}
             empty={w.tapeEmpty}
-            limit={60}
+            limit={30}
             label={w.tapeTitle}
             className="mt-4"
           />

@@ -12,7 +12,7 @@ import type { Dictionary } from "@/i18n"
 export function HeroGate({ dict }: { dict: Dictionary }) {
   const h = dict.home.hero
   return (
-    <figure aria-label={h.aria} className="relative mx-auto w-full max-w-[540px]">
+    <figure aria-label={h.aria} className="relative mx-auto w-full max-w-[580px]">
       <div className="rounded-lg border border-foreground/20 bg-card">
         <div className="flex items-start justify-between gap-3 border-b px-4 py-3.5 sm:px-5">
           <div className="min-w-0">
@@ -31,8 +31,8 @@ export function HeroGate({ dict }: { dict: Dictionary }) {
             </span>
           </div>
         </div>
-        <div className="grid gap-4 p-4 sm:grid-cols-[112px_1fr] sm:p-5">
-          <div className="relative mx-auto hidden w-[112px] sm:block">
+        <div className="grid gap-4 p-4 sm:grid-cols-[132px_1fr] sm:p-5">
+          <div className="relative mx-auto hidden w-[132px] sm:block">
             <span className="gp-hero-locked absolute inset-0">
               <Door />
             </span>

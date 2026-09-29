@@ -103,7 +103,7 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
             </h2>
             <p className="mt-3 text-muted-foreground">{h.rule.intro}</p>
           </div>
-          <div className="overflow-x-auto rounded-md border bg-background">
+          <div className="min-w-0 overflow-x-auto rounded-md border bg-background">
             <table className="w-full min-w-[520px] text-sm">
               <thead>
                 <tr className="border-b text-left">
@@ -143,7 +143,7 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
           <p className="mt-3 text-muted-foreground">{h.records.intro}</p>
           <p className="mt-4 rounded-md bg-stub p-3 text-sm text-stub-foreground">{h.records.note}</p>
         </div>
-        <pre className="overflow-x-auto rounded-md bg-plate p-5 font-mono text-[0.78rem] leading-relaxed text-plate-foreground">
+        <pre className="min-w-0 overflow-x-auto rounded-md bg-plate p-5 font-mono text-[0.78rem] leading-relaxed text-plate-foreground">
           <code>{EVENTS}</code>
         </pre>
       </section>
@@ -165,7 +165,7 @@ export default async function HowItWorksPage({ params }: PageProps<"/[locale]/ho
               ))}
             </ol>
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="label-mono text-muted-foreground">{h.gateway.payloadTitle}</h3>
             <pre className="mt-3 overflow-x-auto rounded-md bg-plate p-5 font-mono text-[0.78rem] leading-relaxed text-plate-foreground">
               <code>{PAYLOAD}</code>

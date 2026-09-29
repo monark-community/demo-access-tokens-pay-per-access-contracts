@@ -20,7 +20,7 @@ export function AppFrame({ children }: { children: ReactNode }) {
   const storageOk = useStorageOk()
   const base = href(locale, "/app")
   const tabs = [
-    { href: base, label: n.passes, icon: Ticket, active: pathname === base || pathname.startsWith(`${base}/gate`) },
+    { href: base, label: n.passes, icon: Ticket, active: pathname === base || pathname.startsWith(`${base}/gate/`) },
     { href: `${base}/console`, label: n.console, icon: Store, active: pathname.startsWith(`${base}/console`) },
     { href: `${base}/gateway`, label: n.gateway, icon: ScanLine, active: pathname.startsWith(`${base}/gateway`) },
   ]

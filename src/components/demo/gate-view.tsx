@@ -68,10 +68,9 @@ export function GateView({ id }: { id: string }) {
         {g.back}
       </Link>
 
-      <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
-        {/* Left: the gate and what it opens */}
-        <div className="flex min-w-0 flex-col gap-6">
-          <section className="overflow-hidden rounded-lg border bg-card">
+      {/* Phones read: gate, pass/buy, access, activity. Desktop: gate + access left, pass + activity right. */}
+      <div className="mt-4 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-x-8">
+          <section className="min-w-0 overflow-hidden rounded-lg border bg-card lg:col-start-1 lg:row-start-1">
             <div className="grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
               <div className="relative">
                 <GateCover gate={gate} className="aspect-[16/10] h-full md:aspect-auto md:min-h-64" priority sizes="(min-width: 1024px) 340px, 100vw" />
@@ -100,16 +99,8 @@ export function GateView({ id }: { id: string }) {
             </div>
           </section>
 
-          <section aria-labelledby="access" className="rounded-lg border bg-card p-5">
-            <h2 id="access" className="mb-4 text-lg font-bold">
-              {g.access}
-            </h2>
-            <Access gate={gate} pass={pass} now={now} connected={connected} onRenew={openRenew} />
-          </section>
-        </div>
-
-        {/* Right: your pass, buying and renewing, activity */}
-        <aside className="flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+        <div className="flex min-w-0 flex-col gap-6 lg:col-start-2 lg:row-start-1 lg:row-span-2">
+          <aside className="flex flex-col gap-6">
           {pass && (
             <section aria-labelledby="your-pass" className="flex flex-col gap-3">
               <div className="flex items-center justify-between gap-3">
@@ -144,14 +135,29 @@ export function GateView({ id }: { id: string }) {
               }}
             />
           )}
+          </aside>
 
-          <section aria-labelledby="activity">
+          <section aria-labelledby="activity" className="order-last hidden lg:block">
             <h2 id="activity" className="mb-3 text-lg font-bold">
               {g.activity}
             </h2>
             <Tape events={events} gates={demo.gates} dict={dict} locale={locale} now={now} empty={g.activityEmpty} limit={7} label={g.activity} />
           </section>
-        </aside>
+        </div>
+
+        <section aria-labelledby="access" className="min-w-0 rounded-lg border bg-card p-5 lg:col-start-1 lg:row-start-2">
+          <h2 id="access" className="mb-4 text-lg font-bold">
+            {g.access}
+          </h2>
+          <Access gate={gate} pass={pass} now={now} connected={connected} onRenew={openRenew} />
+        </section>
+
+        <section aria-labelledby="activity-m" className="min-w-0 lg:hidden">
+          <h2 id="activity-m" className="mb-3 text-lg font-bold">
+            {g.activity}
+          </h2>
+          <Tape events={events} gates={demo.gates} dict={dict} locale={locale} now={now} empty={g.activityEmpty} limit={7} label={g.activity} />
+        </section>
       </div>
     </div>
   )

@@ -303,7 +303,7 @@
     transform: perspective(700px) rotateY(0deg);
   }
   100% {
-    transform: perspective(700px) rotateY(-28deg);
+    transform: perspective(500px) rotateY(-52deg);
   }
 }
 

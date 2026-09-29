@@ -28,9 +28,9 @@ export function stubText(pass: Pass, gate: Gate, state: PassState, now: number, 
   if (pass.expiresAt !== null) {
     if (state === "expired") {
       return {
-        remaining: formatDateTime(pass.expiresAt, locale),
-        remainingLabel: s.expired,
-        caption: t(s.bought, { date: formatDateTime(pass.purchasedAt, locale) }),
+        remaining: "0 s",
+        remainingLabel: s.left,
+        caption: t(s.expiredOn, { date: formatDateTime(pass.expiresAt, locale) }),
         stamp: s.expired,
       }
     }
