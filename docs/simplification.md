@@ -97,5 +97,27 @@ Dictionary copy: **EN 2,990 → 2,411 (−19%)**, **FR 3,233 → 2,604 (−19%)*
 
 ### Screenshots
 
-- Before: `docs/screenshots/before/en-1440-light-page-home.png`, `docs/screenshots/before/en-1440-light-flow2-01-gate-2-hours.png`.
+- Before: `docs/screenshots/before-simplification/en-1440-light-page-home.png`, `docs/screenshots/before-simplification/en-1440-light-flow2-01-gate-2-hours.png`.
 - After: `docs/screenshots/en-1440-light-page-home.png`, `docs/screenshots/en-1440-light-flow2-01-gate-2-hours.png`, and every other page and flow step in `docs/screenshots/` (EN 390/1440 light/dark, FR 390/1440 light). File names are unchanged, so the project image did not need re-rendering.
+
+## 4. "Digital keys" revision (2026-09-30)
+
+The redesign (see `docs/site-plan.md`, revision note) was held to the same restraint rules: hero 5 + 18 words, five home sections, four FAQ answers ≤ 15 words, no intro paragraphs in the app. Measured the same way, on the same pages:
+
+| Page | After simplification | After "digital keys" | Why it moved |
+|-|-:|-:|-|
+| Home | 256 | 255 | Same budget, new sections ("Three kinds of key", "Doors or downloads") replace "Three ways" and the steps |
+| How it works | 235 | 395 | New "Where it plugs in" section (hardware and SDK, asked for by the owner) |
+| Credits | 75 | 362 | 24 required photo credits instead of 4 |
+| 404 | 22 | 23 | |
+| App: wallet gate | 116 | 187 | Nine gates and their owners in the catalogue, instead of six |
+| App: keys | 187 | 277 | Same, plus one key of each kind in "Your keys" |
+| App: gate (Studio B) | 152 | 137 | One Unlock panel replaces the buy panel, the pass card and the per-kind action |
+| App: console | 178 | 176 | |
+| App: publish a gate | 117 | 120 | |
+| App: gateway | 162 | 177 | |
+| **Total** | **1,500** | **2,109** | |
+
+Interface copy stayed flat; the growth is the integrations section the owner asked for, photo credits and seeded data (three more gates, owner names). Dictionary copy: EN 2,698 words, FR 2,964 (`node scripts/dictcount.mjs`).
+
+Screenshots before this revision: `docs/screenshots/before-keys/`.
