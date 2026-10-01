@@ -25,9 +25,11 @@ const L = {
     controls: "Demo controls",
     fail: "Fail the next transaction",
     retry: "Try again",
-    open: "Open the door",
     plusDay: "+1 day",
-    passes: "Passes",
+    yours: "Your keys",
+    unlockFor: /^Unlock · /,
+    unlock: "Unlock",
+    gateOpen: /Gate open/,
   },
   fr: {
     connect: "Connecter le portefeuille de démo",
@@ -38,9 +40,11 @@ const L = {
     controls: "Contrôles de démo",
     fail: "Faire échouer la prochaine transaction",
     retry: "Réessayer",
-    open: "Ouvrir la porte",
     plusDay: "+1 jour",
-    passes: "Laissez-passer",
+    yours: "Vos clés",
+    unlockFor: /^Ouvrir · /,
+    unlock: "Ouvrir",
+    gateOpen: /Grille ouverte/,
   },
 }
 
@@ -63,7 +67,8 @@ async function newPage(browser, v) {
 
 const shot = async (page, v, name, fullPage = false) => {
   await page.waitForTimeout(350)
-  await page.screenshot({ path: `${OUT}${v.locale}-${v.w}-${v.theme}-${name}.png`, fullPage })
+  // Finite animations jump to their end: headless Chrome only advances them when a frame is drawn.
+  await page.screenshot({ path: `${OUT}${v.locale}-${v.w}-${v.theme}-${name}.png`, fullPage, animations: "disabled" })
   const sw = await page.evaluate(() => document.documentElement.scrollWidth)
   if (sw > v.w) console.log(`  ! horizontal overflow on ${name}: ${sw}px`)
   console.log("  ✓", `${v.locale}-${v.w}-${v.theme}-${name}`)
@@ -90,9 +95,9 @@ async function connect(page, v, capture) {
     await dialog(page).waitFor()
   }
   await dialog(page).getByRole("button", { name: t.connectOk, exact: true }).click()
-  await page.getByRole("heading", { level: 2, name: v.locale === "fr" ? "Vos laissez-passer" : "Your passes" }).waitFor()
+  await page.getByRole("heading", { level: 2, name: t.yours }).waitFor()
   await page.waitForTimeout(1500)
-  if (capture) await shot(page, v, "flow1-04-passes", true)
+  if (capture) await shot(page, v, "flow1-04-keys", true)
 }
 
 async function toggleFail(page, v) {
@@ -103,15 +108,15 @@ async function toggleFail(page, v) {
   await page.waitForTimeout(300)
 }
 
-async function buyStudio(page, v, withFailure) {
+/** Flow 2: no key yet. Pick 2 hours of the basketball cage, pay, watch the unlock, get the PIN. */
+async function unlockCage(page, v, withFailure) {
   const t = L[v.locale]
-  await go(page, v, "/app/gate/studio-b")
+  await go(page, v, "/app/gate/pine-cage")
   await page.getByRole("button", { name: t.more, exact: true }).click()
   await page.waitForTimeout(200)
-  await shot(page, v, "flow2-01-gate-2-hours", true)
+  await shot(page, v, "flow2-01-gate", true)
   if (withFailure) await toggleFail(page, v)
-  const pay = page.getByRole("button", { name: /^(Pay|Payer) 24/ })
-  await pay.click()
+  await page.getByRole("button", { name: t.unlockFor }).click()
   await dialog(page).waitFor()
   await shot(page, v, "flow2-02-pay-prompt")
   await dialog(page).getByRole("button", { name: t.approve }).click()
@@ -126,11 +131,19 @@ async function buyStudio(page, v, withFailure) {
     await page.getByRole("button", { name: t.retry }).click()
     await dialog(page).getByRole("button", { name: t.approve }).click()
   }
-  await page.locator("[data-slot=tx-status][data-status=confirmed]").waitFor({ timeout: 10000 })
+  // Mid-story: the key is minted and goes in.
+  await page
+    .locator("#unlock-stage")
+    .filter({ hasText: /Key in|Clé insérée|Checking|Vérification|Minting|Création/ })
+    .waitFor({ timeout: 12000 })
+  await center(page.locator("#unlock-title"))
+  await shot(page, v, "flow2-05-unlocking")
+  await page.getByText(t.gateOpen).first().waitFor({ timeout: 10000 })
   await page.waitForTimeout(700)
+  await center(page.locator("#unlock-title"))
+  await shot(page, v, "flow2-06-unlocked")
   await page.evaluate(() => window.scrollTo(0, 0))
-  await shot(page, v, "flow2-05-confirmed")
-  if (v.w < 768) await shot(page, v, "flow2-05-confirmed-full", true)
+  await shot(page, v, "flow2-07-unlocked-full", true)
 }
 
 async function marketing(page, v) {
@@ -156,67 +169,69 @@ async function marketing(page, v) {
 async function appFlows(page, v) {
   const t = L[v.locale]
   await connect(page, v, true)
-  await buyStudio(page, v, true)
+  await unlockCage(page, v, true)
 
-  // Flow 3a: use the pass — the door opens.
-  const openBtn = page.getByRole("button", { name: t.open })
-  await center(openBtn)
-  await openBtn.click()
-  await page.getByText(/Door unlocked/).waitFor({ timeout: 8000 })
-  await page.waitForTimeout(500)
-  await center(page.getByText(/Door unlocked/))
-  await shot(page, v, "flow3-01-door-open")
+  // Flow 3a: a metered key you already hold. One tap spends one entry and opens the court gate.
+  await go(page, v, "/app/gate/riverside-court")
+  await page.getByRole("button", { name: t.unlock, exact: true }).click()
+  await page.getByText(t.gateOpen).first().waitFor({ timeout: 10000 })
+  await page.waitForTimeout(600)
+  await shot(page, v, "flow3-01-court-open", true)
+  // The carousel: next photo.
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.getByRole("button", { name: "Next photo" }).click()
+  await page.waitForTimeout(700)
+  await shot(page, v, "flow3-02-carousel")
 
-  // Flow 2 failure: not enough balance for 4 more hours.
-  await page.getByRole("button", { name: "Renew" }).first().click()
+  // Flow 3b: a timed digital key: the stream plays.
+  await go(page, v, "/app/gate/rooftop-session")
+  await page.getByRole("button", { name: t.unlock, exact: true }).click()
+  await page.getByText("Live", { exact: true }).waitFor({ timeout: 10000 })
+  await page.waitForTimeout(1200)
+  await shot(page, v, "flow3-03-stream-playing", true)
+
+  // Flow 3c: a keep-forever key: the report opens.
+  await go(page, v, "/app/gate/lowwater-report")
+  await page.getByRole("button", { name: t.unlock, exact: true }).click()
+  await page.getByText("Full report unlocked").waitFor({ timeout: 10000 })
+  await page.waitForTimeout(800)
+  await shot(page, v, "flow3-04-report-open", true)
+
+  // Not enough balance: three 2-hour blocks of the baseball diamond.
+  await go(page, v, "/app/gate/diamond-3")
   const more = page.getByRole("button", { name: t.more, exact: true })
-  for (let i = 0; i < 3; i++) await more.click()
+  for (let i = 0; i < 2; i++) await more.click()
   await page.getByText(/Not enough tUSDC/).waitFor()
   await center(page.getByText(/Not enough tUSDC/))
-  await shot(page, v, "flow2-06-insufficient")
+  await shot(page, v, "flow2-08-insufficient")
 
-  // Flow 5: the gateway — a granted and a refused check, and the tape.
+  // Flow 5: the gateway: a granted and a refused check, and the tape.
   await go(page, v, "/app/gateway")
-  await page.getByLabel("Pass code").fill("GP-4K7Q-2M")
-  await page.getByRole("button", { name: "Check pass" }).click()
+  await page.getByLabel("Key code").fill("GP-4K7Q-2M")
+  await page.getByRole("button", { name: "Check key" }).click()
   await page.getByText("Access granted").waitFor({ timeout: 8000 })
   await shot(page, v, "flow5-01-granted", v.w >= 768)
-  const expired = page.getByRole("button", { name: "GP-ZMWP-KM" })
-  await expired.click()
-  await page.getByRole("button", { name: "Check pass" }).click()
+  await page.getByLabel("Key code").fill("GP-AAAA-AA")
+  await page.getByRole("button", { name: "Check key" }).click()
   await page.getByText("Access denied").waitFor({ timeout: 8000 })
   await center(page.getByText("Access denied"))
   await shot(page, v, "flow5-02-denied")
   await page.getByRole("heading", { name: "Access tape" }).scrollIntoViewIfNeeded()
   await shot(page, v, "flow5-03-tape")
 
-  // Flow 3b: stream playback on a live pass.
-  await go(page, v, "/app/gate/rooftop-session")
-  await page.getByRole("button", { name: "Play the stream" }).click()
-  await page.getByText("Live", { exact: true }).waitFor({ timeout: 8000 })
-  await page.waitForTimeout(1200)
-  await shot(page, v, "flow3-02-stream-playing", v.w >= 768)
-
-  // Flow 3c: fast-forward a day; the studio pass expires and the door refuses it.
+  // Flow 3d: fast-forward a day; the 2-hour cage key has expired and the button offers to renew.
   await page.getByRole("button", { name: t.controls }).click()
   await dialog(page).getByRole("button", { name: t.plusDay }).click()
   await page.waitForTimeout(300)
   await shot(page, v, "app-demo-controls")
   await page.keyboard.press("Escape")
-  await go(page, v, "/app/gate/studio-b")
-  await page.waitForTimeout(600)
-  const open2 = page.getByRole("button", { name: t.open })
-  await open2.click()
-  await page.getByText(/Pass expired/).waitFor({ timeout: 8000 })
+  await go(page, v, "/app/gate/pine-cage")
+  await page.getByRole("button", { name: /^Renew & unlock/ }).waitFor({ timeout: 8000 })
   await page.evaluate(() => window.scrollTo(0, 0))
-  await shot(page, v, "flow3-03-expired-denied", true)
-
-  // Metered pass: locker with uses left, board post.
-  await go(page, v, "/app/gate/locker-14")
-  await page.getByRole("button", { name: "Open the locker" }).click()
-  await page.getByText(/Locker open/).waitFor({ timeout: 8000 })
-  await page.waitForTimeout(500)
-  await shot(page, v, "flow3-04-locker-open", true)
+  await shot(page, v, "flow3-05-expired-renew", true)
+  await go(page, v, "/app")
+  await page.waitForTimeout(800)
+  await shot(page, v, "flow3-06-keys-after", true)
 
   // Flow 4: publish a gate from the console.
   await go(page, v, "/app/console")
@@ -232,7 +247,7 @@ async function appFlows(page, v) {
   await page.getByLabel("Where or what").fill("Harbour Street Works, 3rd floor")
   await page.getByLabel("Description").fill("Treated room with a five-piece kit, cymbals and two monitors.")
   await page.getByLabel("Price per unit").fill("15")
-  await page.getByLabel("Webhook URL").fill("https://hooks.harbourstreet.works/studio-c/unlock")
+  await page.getByLabel("Webhook URL").fill("https://hooks.harbourstreet.example/studio-c/unlock")
   await shot(page, v, "flow4-03-composer-filled", true)
   await page.getByRole("button", { name: "Publish gate" }).click()
   await dialog(page).waitFor()
@@ -244,13 +259,31 @@ async function appFlows(page, v) {
   await shot(page, v, "flow4-05-published")
 }
 
+/** The unlock with prefers-reduced-motion: same states, no choreography. */
+async function reducedMotion(browser, v) {
+  const context = await browser.newContext({ viewport: sizes[v.w], colorScheme: v.theme, reducedMotion: "reduce" })
+  await context.addInitScript((t) => {
+    try {
+      window.localStorage.setItem("theme", t)
+    } catch {}
+  }, v.theme)
+  const page = await context.newPage()
+  page.on("pageerror", (e) => console.log("  ! pageerror", e.message))
+  await connect(page, v, false)
+  await go(page, v, "/app/gate/riverside-court")
+  await page.getByRole("button", { name: L[v.locale].unlock, exact: true }).click()
+  await page.getByText(L[v.locale].gateOpen).first().waitFor({ timeout: 10000 })
+  await shot(page, v, "flow3-07-court-open-reduced-motion", true)
+  await context.close()
+}
+
 async function frenchFlow(page, v) {
   await go(page, v, "")
   await page.waitForTimeout(400)
   await shot(page, v, "page-home", true)
   await connect(page, v, false)
-  await shot(page, v, "flow1-04-passes", true)
-  await buyStudio(page, v, false)
+  await shot(page, v, "flow1-04-keys", true)
+  await unlockCage(page, v, false)
   await go(page, v, "/app/console")
   await shot(page, v, "flow4-01-console", true)
 }
@@ -267,6 +300,7 @@ for (const v of variants) {
     else {
       await marketing(page, v)
       await appFlows(page, v)
+      if (v.w === 1440 && v.theme === "light") await reducedMotion(browser, v)
     }
   } catch (e) {
     console.error("  ✗", tag, e.message)

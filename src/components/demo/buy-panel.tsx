@@ -6,9 +6,10 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { t } from "@/i18n/t"
 import { applyPurchase, topUp } from "@/lib/demo/ops"
+import { ownerOf } from "@/lib/demo/rules"
 import { useDemo } from "@/lib/demo/store"
 import { roundToken } from "@/lib/demo/tokens"
-import type { Gate, Pass } from "@/lib/demo/types"
+import type { Gate, AccessKey } from "@/lib/demo/types"
 import { useTx } from "@/lib/demo/use-tx"
 import { formatAmount, formatUnits, shortAddress } from "@/lib/format"
 import { cn } from "@/lib/utils"
@@ -19,7 +20,7 @@ import { ConnectCard } from "./connect-card"
 import { TxFeedback } from "./tx-feedback"
 
 /**
- * Buy (or renew) a pass: units, total, balance, the wallet prompt, and the
+ * Buy (or renew) a key: units, total, balance, the wallet prompt, and the
  * pending / confirmed / failed / rejected states inline.
  */
 export function BuyPanel({
@@ -29,7 +30,7 @@ export function BuyPanel({
   className,
 }: {
   gate: Gate
-  renew?: Pass
+  renew?: AccessKey
   onDone?: (code: string, renewed: boolean) => void
   className?: string
 }) {
@@ -47,6 +48,7 @@ export function BuyPanel({
   const total = roundToken(units * rule.price, rule.token)
   const insufficient = total > balance
   const paused = gate.status === "paused" && !renew
+  const owner = ownerOf(demo.owners, gate)
   const bought = rule.mode === "forever" ? g.lineGetForever : formatUnits(rule, gate.kind, units, dict.units)
 
   async function pay() {
@@ -56,7 +58,7 @@ export function BuyPanel({
       movesValue: true,
       lines: [
         { label: g.linePay, value: formatAmount(total, rule.token, locale) },
-        { label: g.lineTo, value: `${gate.ownerName} · ${shortAddress(gate.contract)}` },
+        { label: g.lineTo, value: `${owner.name} · ${shortAddress(gate.contract)}` },
         { label: g.lineGet, value: renew ? `+ ${bought} · ${renew.code}` : bought },
       ],
     }

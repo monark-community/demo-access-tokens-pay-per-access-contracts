@@ -40,7 +40,7 @@ export function DemoControls({ className }: { className?: string }) {
         <Button variant="outline" size="sm" className={className}>
           <SlidersHorizontal aria-hidden="true" />
           {c.open}
-          {(offset > 0 || demo?.settings.failNext) && <span className="size-2 rounded-full bg-brass" aria-hidden="true" />}
+          {(offset > 0 || demo?.settings.failNext) && <span className="size-2 rounded-full bg-primary" aria-hidden="true" />}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md" closeLabel={dict.common.close}>
@@ -58,7 +58,7 @@ export function DemoControls({ className }: { className?: string }) {
             {now ? t(c.clockNow, { time: formatDateTime(now, locale) }) : "—"}
           </p>
           {offset > 0 && (
-            <p className="mt-0.5 text-xs text-brass">{t(c.clockAhead, { time: formatRemaining(offset, dict.units) })}</p>
+            <p className="mt-0.5 text-xs text-primary">{t(c.clockAhead, { time: formatRemaining(offset, dict.units) })}</p>
           )}
           <div className="mt-3 flex flex-wrap gap-2">
             <Button size="sm" variant="secondary" onClick={() => fastForward(HOUR)}>
@@ -126,7 +126,7 @@ export function DemoControls({ className }: { className?: string }) {
             </div>
           </div>
         )}
-        {!storageOk && <p className="text-xs text-brass">{c.storageOff}</p>}
+        {!storageOk && <p className="text-xs text-primary">{c.storageOff}</p>}
       </DialogContent>
     </Dialog>
   )

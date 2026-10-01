@@ -7,7 +7,20 @@
 export type TokenSymbol = "tUSDC" | "tDAI" | "tETH"
 
 /** What sits behind the gate. The kind decides the gateway action. */
-export type GateKind = "room" | "locker" | "stream" | "video" | "document" | "board"
+export type GateKind = "room" | "locker" | "court" | "stream" | "video" | "document" | "board"
+
+/** Physical gates open a lock on site; digital gates reveal something on screen. */
+export type Surface = "physical" | "digital"
+
+/** Who sells access at a gate: the person or organisation you pay. */
+export interface Owner {
+  id: string
+  name: string
+  kind: "org" | "person"
+  /** Key into the photo table for a portrait; organisations show a monogram. */
+  avatar?: string
+  address: string
+}
 
 /** time: each unit buys a duration · uses: each unit buys N uses · forever: one payment, no end. */
 export type AccessMode = "time" | "uses" | "forever"
@@ -34,15 +47,17 @@ export interface Gate {
   /** Short place or channel line under the title. */
   place: string
   description: string
-  ownerName: string
+  /** Who you pay (see DemoState.owners). */
+  ownerId: string
+  /** The owner's payout address. */
   ownerAddress: string
-  /** The pay-per-access contract that records passes for this gate. */
+  /** The pay-per-access contract that records keys for this gate. */
   contract: string
   rule: Rule
   /** Device gates call this webhook after a successful check. */
   webhookUrl?: string
-  /** Key into the photo table (see lib/photos.ts); code-drawn cover when absent. */
-  photo?: string
+  /** Keys into the photo table (see lib/photos.ts), first is the cover; a code-drawn cover when empty. */
+  photos: string[]
   status: "live" | "paused"
   createdAt: number
   /** Lifetime counters (seeded with plausible history). */
@@ -50,10 +65,10 @@ export interface Gate {
   revenue: number
 }
 
-export interface Pass {
+export interface AccessKey {
   /** On-chain token id. */
   tokenId: number
-  /** Human code printed on the stub and typed at the door, e.g. GP-4K7Q-2M. */
+  /** Human code shown on the key and typed at the door, e.g. GP-4K7Q-2M. */
   code: string
   gateId: string
   holder: string
@@ -69,7 +84,7 @@ export interface Pass {
   txHash: string
 }
 
-export type PassState = "active" | "low" | "expired" | "spent" | "forever"
+export type KeyState = "active" | "low" | "expired" | "spent" | "forever"
 
 export type DenyReason = "expired" | "spent" | "wrongGate" | "unknown" | "paused"
 
@@ -108,17 +123,18 @@ export interface DemoSettings {
 }
 
 export interface DemoState {
-  version: 1
+  version: 2
   locale: "en" | "fr"
   wallet: WalletState
   operator: { name: string; address: string }
+  owners: Owner[]
   gates: Gate[]
-  passes: Pass[]
+  keys: AccessKey[]
   log: LogEvent[]
   board: BoardPost[]
   settings: DemoSettings
   nextTokenId: number
-  /** Codes of passes whose expiry has already been written to the tape. */
+  /** Codes of keys whose expiry has already been written to the tape. */
   expiryLogged: string[]
 }
 

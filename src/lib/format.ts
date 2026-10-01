@@ -68,6 +68,7 @@ export function formatUnits(rule: Rule, kind: GateKind, count: number, units: Un
 }
 
 export function formatUses(n: number, kind: GateKind, units: Units): string {
+  if (kind === "court") return plural(n, units.entry, units.entries)
   if (kind === "room" || kind === "locker") return plural(n, units.open, units.opens)
   if (kind === "board") return plural(n, units.post, units.posts)
   return plural(n, units.use, units.uses)

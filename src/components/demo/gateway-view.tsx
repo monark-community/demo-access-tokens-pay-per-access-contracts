@@ -3,8 +3,8 @@
 import { Loader2, ScanLine } from "lucide-react"
 import { useState } from "react"
 
-import { Plate } from "@/components/pass/plate"
-import { Tape } from "@/components/pass/tape"
+import { Plate } from "@/components/key/plate"
+import { Tape } from "@/components/key/tape"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { InfoTip } from "@/components/ui/info-tip"
@@ -12,14 +12,14 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { WalletAddress } from "@/components/ui/wallet"
 import { t } from "@/i18n/t"
-import { checkPass, type CheckResult } from "@/lib/demo/ops"
+import { checkKey, type CheckResult } from "@/lib/demo/ops"
 import { useDemo, useNow } from "@/lib/demo/store"
 import { formatDateTime, formatNumber, formatUses } from "@/lib/format"
 import { cn } from "@/lib/utils"
 
 import { useApp } from "./app-provider"
 import { PageHead } from "./page-head"
-import { ViewSkeleton } from "./passes-view"
+import { ViewSkeleton } from "./keys-view"
 
 export function GatewayView() {
   const { dict, locale } = useApp()
@@ -37,7 +37,7 @@ export function GatewayView() {
 
   const gate = demo.gates.find((g) => g.id === gateId) ?? demo.gates[0]
   const recent = gate
-    ? demo.passes
+    ? demo.keys
         .filter((p) => p.gateId === gate.id)
         .sort((a, b) => b.purchasedAt - a.purchasedAt)
         .slice(0, 5)
@@ -53,7 +53,7 @@ export function GatewayView() {
     setCodeError(false)
     setChecking(true)
     setResult(null)
-    const r = await checkPass(gate.id, code, { consume: false })
+    const r = await checkKey(gate.id, code, { consume: false })
     setResult(r)
     setChecking(false)
   }
@@ -170,29 +170,29 @@ export function GatewayView() {
                 </div>
                 {!result.ok && (
                   <p className="mt-2 text-sm font-semibold">
-                    {result.reason === "expired" && result.pass?.expiresAt
-                      ? t(dict.app.use.denied.expired, { date: formatDateTime(result.pass.expiresAt, locale) })
+                    {result.reason === "expired" && result.key?.expiresAt
+                      ? t(dict.app.use.denied.expired, { date: formatDateTime(result.key.expiresAt, locale) })
                       : dict.app.use.denied[result.reason]}
                   </p>
                 )}
                 <dl className="mt-4 divide-y divide-dashed text-sm">
-                  {result.pass && (
+                  {result.key && (
                     <>
                       <div className="flex justify-between gap-3 py-2">
                         <dt className="text-muted-foreground">{w.facts.holder}</dt>
                         <dd>
-                          <WalletAddress address={result.pass.holder} className="text-xs" />
+                          <WalletAddress address={result.key.holder} className="text-xs" />
                         </dd>
                       </div>
                       <div className="flex justify-between gap-3 py-2">
                         <dt className="text-muted-foreground">
-                          {result.pass.usesLeft !== null ? w.facts.uses : w.facts.ends}
+                          {result.key.usesLeft !== null ? w.facts.uses : w.facts.ends}
                         </dt>
                         <dd className="font-mono text-xs">
-                          {result.pass.expiresAt !== null
-                            ? formatDateTime(result.pass.expiresAt, locale)
-                            : result.pass.usesLeft !== null
-                              ? formatUses(result.pass.usesLeft, gate.kind, dict.units)
+                          {result.key.expiresAt !== null
+                            ? formatDateTime(result.key.expiresAt, locale)
+                            : result.key.usesLeft !== null
+                              ? formatUses(result.key.usesLeft, gate.kind, dict.units)
                               : w.facts.forever}
                         </dd>
                       </div>

@@ -47,9 +47,9 @@ for (const [name, path] of [
 await run("App: wallet gate", "/en/app")
 await page.getByRole("main").getByRole("button", { name: "Connect demo wallet" }).click()
 await page.getByRole("dialog").getByRole("button", { name: "Connect", exact: true }).click()
-await page.getByRole("heading", { level: 2, name: "Your passes" }).waitFor()
+await page.getByRole("heading", { level: 2, name: "Your keys" }).waitFor()
 await page.waitForTimeout(1200)
-rows.push({ name: "App: passes", ...(await measure(page)) })
+rows.push({ name: "App: keys", ...(await measure(page)) })
 
 await run("App: gate (Studio B)", "/en/app/gate/studio-b")
 await run("App: console", "/en/app/console")

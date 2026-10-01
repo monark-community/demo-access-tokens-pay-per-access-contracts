@@ -4,16 +4,16 @@ import { Eye, Pause, Play, Plus, Users } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
-import { KindIcon } from "@/components/pass/kind-icon"
-import { Plate } from "@/components/pass/plate"
+import { KindIcon } from "@/components/key/kind-icon"
+import { Plate } from "@/components/key/plate"
 import { Button } from "@/components/ui/button"
 import { Wallet, WalletAddress, WalletAvatar } from "@/components/ui/wallet"
 import { href } from "@/i18n/config"
 import { t } from "@/i18n/t"
 import { applyPause } from "@/lib/demo/ops"
-import { isUsable, passState } from "@/lib/demo/rules"
+import { isUsable, keyState } from "@/lib/demo/rules"
 import { useDemo, useNow } from "@/lib/demo/store"
-import type { Gate, PassState, TokenSymbol } from "@/lib/demo/types"
+import type { Gate, KeyState, TokenSymbol } from "@/lib/demo/types"
 import { useTx } from "@/lib/demo/use-tx"
 import { formatDateTime, formatNumber, formatUses } from "@/lib/format"
 import { cn } from "@/lib/utils"
@@ -23,16 +23,16 @@ import { useApp } from "./app-provider"
 import { GateCover } from "./gate-cover"
 import { priceLine } from "./gate-text"
 import { PageHead } from "./page-head"
-import { ViewSkeleton } from "./passes-view"
+import { ViewSkeleton } from "./keys-view"
 import { TxFeedback } from "./tx-feedback"
 
 const HOLDERS_PAGE = 5
 
-const stateTone: Record<PassState, string> = {
+const stateTone: Record<KeyState, string> = {
   active: "text-primary",
-  low: "text-brass",
-  expired: "text-rust",
-  spent: "text-rust",
+  low: "text-primary",
+  expired: "text-muted-foreground",
+  spent: "text-muted-foreground",
   forever: "text-primary",
 }
 
@@ -49,14 +49,14 @@ export function ConsoleView() {
   const op = demo.operator.address.toLowerCase()
   const gates = demo.gates.filter((g) => g.ownerAddress.toLowerCase() === op)
   const ids = new Set(gates.map((g) => g.id))
-  const passes = demo.passes.filter((p) => ids.has(p.gateId))
+  const keys = demo.keys.filter((p) => ids.has(p.gateId))
   const revenue = gates.reduce<Partial<Record<TokenSymbol, number>>>((acc, g) => {
     acc[g.rule.token] = (acc[g.rule.token] ?? 0) + g.revenue
     return acc
   }, {})
   const dayStart = new Date(now).setHours(0, 0, 0, 0)
   const checksToday = demo.log.filter((e) => e.type === "check" && ids.has(e.gateId) && e.at >= dayStart).length
-  const activeNow = passes.filter((p) => isUsable(p, now)).length
+  const activeNow = keys.filter((p) => isUsable(p, now)).length
   const current = gates.find((g) => g.id === selected) ?? gates[0]
 
   return (
@@ -118,7 +118,7 @@ export function ConsoleView() {
               <GateRow
                 key={gate.id}
                 gate={gate}
-                active={passes.filter((p) => p.gateId === gate.id && isUsable(p, now)).length}
+                active={keys.filter((p) => p.gateId === gate.id && isUsable(p, now)).length}
                 selected={current?.id === gate.id}
                 onSelect={() => {
                   setSelected(gate.id)
@@ -137,14 +137,14 @@ export function ConsoleView() {
             {t(c.holdersOf, { gate: current.title })}
           </h2>
           {(() => {
-            const rows = passes.filter((p) => p.gateId === current.id).sort((a, b) => b.purchasedAt - a.purchasedAt)
+            const rows = keys.filter((p) => p.gateId === current.id).sort((a, b) => b.purchasedAt - a.purchasedAt)
             if (rows.length === 0) return <p className="mt-4 rounded-lg border border-dashed p-6 text-center text-muted-foreground">{c.noHolders}</p>
             return (
               <div className="mt-4 overflow-x-auto rounded-lg border bg-card">
                 <table className="w-full min-w-[520px] text-sm">
                   <thead>
                     <tr className="border-b text-left">
-                      {[c.columns.holder, c.columns.pass, c.columns.state, c.columns.ends].map((h) => (
+                      {[c.columns.holder, c.columns.key, c.columns.state, c.columns.ends].map((h) => (
                         <th key={h} scope="col" className="label-mono px-4 py-3 font-medium text-muted-foreground">
                           {h}
                         </th>
@@ -153,7 +153,7 @@ export function ConsoleView() {
                   </thead>
                   <tbody className="divide-y divide-dashed">
                     {rows.slice(0, holderLimit).map((p) => {
-                      const st = passState(p, now)
+                      const st = keyState(p, now)
                       return (
                         <tr key={p.code}>
                           <td className="px-4 py-2.5">

@@ -2,7 +2,7 @@ import Link from "next/link"
 import { locale as rootLocale } from "next/root-params"
 
 import { Door } from "@/components/diagrams/door"
-import { Plate } from "@/components/pass/plate"
+import { Plate } from "@/components/key/plate"
 import { Button } from "@/components/ui/button"
 import { href, isLocale, type Locale } from "@/i18n/config"
 import { getDictionary } from "@/i18n"
@@ -28,7 +28,7 @@ export default async function NotFound() {
         <Plate state="locked" label={d.app.plate.locked} className="absolute -top-3 left-1/2 -translate-x-1/2" />
       </div>
       <div>
-        <p className="label-mono text-rust">{n.code}</p>
+        <p className="label-mono text-muted-foreground">{n.code}</p>
         <h1 className="mt-2 text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">{n.title}</h1>
         <p className="mt-4 max-w-md text-lg text-muted-foreground">{n.body}</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">

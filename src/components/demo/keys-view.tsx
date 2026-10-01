@@ -4,14 +4,14 @@ import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
-import { Plate } from "@/components/pass/plate"
-import { KindIcon } from "@/components/pass/kind-icon"
+import { Plate } from "@/components/key/plate"
+import { KindIcon } from "@/components/key/kind-icon"
 import { Button } from "@/components/ui/button"
 import { href } from "@/i18n/config"
-import { isUsable, KINDS } from "@/lib/demo/rules"
+import { isUsable, ownerOf, surfaceOf } from "@/lib/demo/rules"
 import { useDemo, useNow } from "@/lib/demo/store"
 import { TOKEN_LIST } from "@/lib/demo/tokens"
-import type { GateKind } from "@/lib/demo/types"
+import type { AccessMode, Surface } from "@/lib/demo/types"
 import { cn } from "@/lib/utils"
 
 import { Amount } from "./amount"
@@ -20,29 +20,47 @@ import { ConnectCard } from "./connect-card"
 import { GateCover } from "./gate-cover"
 import { priceLine } from "./gate-text"
 import { PageHead } from "./page-head"
-import { PassCard } from "./pass-card"
+import { KeyCard } from "./key-card"
+import { OwnerAvatar } from "./owner-avatar"
 
-export function PassesView() {
+type Filter = "all" | Surface | AccessMode
+const SURFACES: Surface[] = ["physical", "digital"]
+const MODES: AccessMode[] = ["time", "uses", "forever"]
+
+export function KeysView() {
   const { dict, locale } = useApp()
-  const p = dict.app.passes
+  const p = dict.app.keys
   const demo = useDemo()
   const now = useNow()
-  const [filter, setFilter] = useState<GateKind | "all">("all")
+  const [filter, setFilter] = useState<Filter>("all")
 
   if (!demo || !now) return <ViewSkeleton />
 
   const connected = demo.wallet.status === "connected"
   const me = demo.wallet.address.toLowerCase()
-  const mine = demo.passes
+  const mine = demo.keys
     .filter((x) => x.holder.toLowerCase() === me)
     .sort((a, b) => Number(isUsable(b, now)) - Number(isUsable(a, now)) || b.purchasedAt - a.purchasedAt)
   const gatesById = new Map(demo.gates.map((g) => [g.id, g]))
-  const kinds = KINDS.filter((k) => demo.gates.some((g) => g.kind === k))
-  const shown = demo.gates.filter((g) => filter === "all" || g.kind === filter)
+  const shown = demo.gates.filter((g) => filter === "all" || surfaceOf(g.kind) === filter || g.rule.mode === filter)
+  const chip = (k: Filter, label: string) => (
+    <button
+      key={k}
+      type="button"
+      aria-pressed={filter === k}
+      onClick={() => setFilter(k)}
+      className={cn(
+        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 font-mono text-[0.8rem] font-semibold transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none",
+        filter === k ? "border-foreground bg-foreground text-background" : "border-foreground/20 text-muted-foreground hover:border-foreground/50 hover:text-foreground"
+      )}
+    >
+      {label}
+    </button>
+  )
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:py-10">
-      <PageHead seat={dict.app.seats.passes} title={p.title} />
+      <PageHead seat={dict.app.seats.keys} title={p.title} />
 
       <section aria-labelledby="yours" className="mt-8">
         <div className="flex flex-wrap items-end justify-between gap-3">
@@ -68,16 +86,16 @@ export function PassesView() {
           <p className="mt-4 rounded-lg border border-dashed p-6 text-center text-muted-foreground">{p.none}</p>
         ) : (
           <ul className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {mine.map((pass) => {
-              const gate = gatesById.get(pass.gateId)
+            {mine.map((key) => {
+              const gate = gatesById.get(key.gateId)
               if (!gate) return null
               return (
-                <li key={pass.code}>
+                <li key={key.code}>
                   <Link
                     href={href(locale, `/app/gate/${gate.id}`)}
                     className="block h-full rounded-[8px] transition-transform hover:-translate-y-0.5 focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none"
                   >
-                    <PassCard pass={pass} gate={gate} now={now} className="h-full" />
+                    <KeyCard accessKey={key} gate={gate} now={now} className="h-full" />
                   </Link>
                 </li>
               )
@@ -92,21 +110,10 @@ export function PassesView() {
             {p.catalogue}
           </h2>
           <div role="group" aria-label={p.filterLabel} className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
-            {(["all", ...kinds] as const).map((k) => (
-              <button
-                key={k}
-                type="button"
-                aria-pressed={filter === k}
-                onClick={() => setFilter(k)}
-                className={cn(
-                  "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none",
-                  filter === k ? "border-foreground bg-foreground text-background" : "border-foreground/20 text-muted-foreground hover:border-foreground/50 hover:text-foreground"
-                )}
-              >
-                {k !== "all" && <KindIcon kind={k} className="size-3.5" />}
-                {dict.kindsPlural[k]}
-              </button>
-            ))}
+            {chip("all", dict.kindsPlural.all)}
+            {SURFACES.map((k) => chip(k, dict.surfaces[k]))}
+            <span aria-hidden="true" className="mx-1 w-px shrink-0 self-stretch bg-border" />
+            {MODES.map((k) => chip(k, dict.modes[k]))}
           </div>
         </div>
         {shown.length === 0 ? (
@@ -119,7 +126,7 @@ export function PassesView() {
         ) : (
           <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {shown.map((gate) => {
-              const holds = connected && demo.passes.some((x) => x.gateId === gate.id && x.holder.toLowerCase() === me && isUsable(x, now))
+              const holds = connected && demo.keys.some((x) => x.gateId === gate.id && x.holder.toLowerCase() === me && isUsable(x, now))
               return (
                 <li key={gate.id}>
                   <Link
@@ -138,9 +145,13 @@ export function PassesView() {
                     <div className="flex flex-1 flex-col gap-1 p-4">
                       <p className="label-mono flex items-center gap-1.5 text-muted-foreground">
                         <KindIcon kind={gate.kind} className="size-3.5" />
-                        {dict.kinds[gate.kind]} · {dict.modes[gate.rule.mode]}
+                        {dict.surfaces[surfaceOf(gate.kind)]} · {dict.modes[gate.rule.mode]}
                       </p>
                       <h3 className="text-lg leading-snug font-bold">{gate.title}</h3>
+                      <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+                        <OwnerAvatar owner={ownerOf(demo.owners, gate)} className="size-6 text-[0.6rem]" />
+                        <span className="truncate">{ownerOf(demo.owners, gate).name}</span>
+                      </p>
                       <div className="mt-auto flex items-center justify-between gap-3 pt-3">
                         <span className="font-mono text-sm font-semibold">{priceLine(gate, dict, locale)}</span>
                         <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-primary transition-transform group-hover:translate-x-0.5" />

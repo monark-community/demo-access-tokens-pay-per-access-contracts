@@ -1,8 +1,9 @@
-import { Clapperboard, DoorOpen, FileText, Megaphone, Radio, Wrench, type LucideIcon } from "lucide-react"
+import { Clapperboard, DoorOpen, Fence, FileText, Megaphone, Radio, Wrench, type LucideIcon } from "lucide-react"
 
 import type { GateKind } from "@/lib/demo/types"
 
 export const KIND_ICON: Record<GateKind, LucideIcon> = {
+  court: Fence,
   room: DoorOpen,
   locker: Wrench,
   stream: Radio,

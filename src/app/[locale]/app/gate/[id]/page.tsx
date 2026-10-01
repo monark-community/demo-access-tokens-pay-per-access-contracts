@@ -1,7 +1,9 @@
 import { GateView } from "@/components/demo/gate-view"
 import { locales } from "@/i18n/config"
+import { getDictionary } from "@/i18n"
 
-const SEEDED = ["studio-b", "rooftop-session", "kiln-course", "locker-14", "lowwater-report", "notice-board"]
+/** Every seeded gate has copy in the dictionary, so that list is the seed's. */
+const SEEDED = Object.keys(getDictionary("en").seed.gates)
 
 /** Seeded gates are prerendered; gates published in the demo render on demand. */
 export function generateStaticParams() {

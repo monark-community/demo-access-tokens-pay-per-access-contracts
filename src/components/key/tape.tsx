@@ -10,12 +10,12 @@ import { tapeText } from "@/lib/tape-text"
 import { cn } from "@/lib/utils"
 
 const tone: Record<LogEvent["type"], string> = {
-  payment: "text-brass",
-  renewal: "text-brass",
+  payment: "text-primary",
+  renewal: "text-primary",
   check: "text-foreground",
   action: "text-primary",
   denied: "text-destructive",
-  expired: "text-rust",
+  expired: "text-muted-foreground",
   published: "text-muted-foreground",
   paused: "text-muted-foreground",
   resumed: "text-muted-foreground",
@@ -81,7 +81,7 @@ export function Tape({
             return (
               <li
                 key={e.id}
-                className={cn("grid grid-cols-[auto_1fr] gap-x-3 px-3.5 py-2", !initial.has(e.id) && "gp-print")}
+                className={cn("grid grid-cols-[auto_1fr] gap-x-3 px-3.5 py-2", !initial.has(e.id) && "gp-type")}
               >
                 <time dateTime={new Date(e.at).toISOString()} className="text-muted-foreground tabular-nums">
                   {day !== today && <span className="mr-1">{day}</span>}
