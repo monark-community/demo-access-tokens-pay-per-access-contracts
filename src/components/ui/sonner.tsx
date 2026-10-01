@@ -1,29 +1,59 @@
+"use client"
+
 import { useTheme } from "next-themes"
-import { Toaster as Sonner, toast } from "sonner"
+import { useSyncExternalStore } from "react"
+import { Toaster as Sonner, type ToasterProps } from "sonner"
+import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
-type ToasterProps = React.ComponentProps<typeof Sonner>
+const QUERY = "(min-width: 768px)"
 
+function useDesktop() {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(QUERY)
+      mq.addEventListener("change", cb)
+      return () => mq.removeEventListener("change", cb)
+    },
+    () => window.matchMedia(QUERY).matches,
+    () => true
+  )
+}
+
+/**
+ * Toasts never sit on the content they report on (new gates appear in lists
+ * below, transactions report inline): top-right below the header on desktop,
+ * top-centre just below the header on phones, clear of the bottom tab bar.
+ */
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+  const { resolvedTheme = "light" } = useTheme()
+  const desktop = useDesktop()
 
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme={resolvedTheme as ToasterProps["theme"]}
       className="toaster group"
-      toastOptions={{
-        classNames: {
-          toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
-        },
+      position={desktop ? "top-right" : "top-center"}
+      offset={{ top: 80, right: 24 }}
+      mobileOffset={{ top: 72, left: 16, right: 16 }}
+      icons={{
+        success: <CircleCheckIcon className="size-4 text-primary" />,
+        info: <InfoIcon className="size-4" />,
+        warning: <TriangleAlertIcon className="size-4 text-brass" />,
+        error: <OctagonXIcon className="size-4 text-destructive" />,
+        loading: <Loader2Icon className="size-4 animate-spin" />,
       }}
+      style={
+        {
+          "--normal-bg": "var(--card)",
+          "--normal-text": "var(--card-foreground)",
+          "--normal-border": "color-mix(in oklab, var(--foreground) 22%, transparent)",
+          "--border-radius": "var(--radius)",
+        } as React.CSSProperties
+      }
+      toastOptions={{ classNames: { toast: "font-sans !shadow-none", title: "font-semibold" } }}
       {...props}
     />
   )
 }
 
-export { Toaster, toast }
+export { Toaster }
