@@ -1,8 +1,11 @@
 import { cn } from "@/lib/utils"
 
-/** Ticket with notched sides and a keyhole punched through (even-odd fill). */
+/**
+ * A rounded-square gate with a keyhole cut through it (even-odd fill). The
+ * tooth on the keyhole's stem is the bit of a key: the gate and the key in one.
+ */
 export const MARK_PATH =
-  "M6 5.5h20a3 3 0 0 1 3 3V13a3 3 0 0 0 0 6v4.5a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V19a3 3 0 0 0 0-6V8.5a3 3 0 0 1 3-3Z M14.9 16.5A3.1 3.1 0 1 1 17.1 16.5L18.3 21.2H13.7Z"
+  "M10 3h12a7 7 0 0 1 7 7v12a7 7 0 0 1-7 7H10a7 7 0 0 1-7-7V10a7 7 0 0 1 7-7Z M14.2 16.6A4 4 0 1 1 17.8 16.6L18.15 19.4H20.6V21.6H18.4L18.6 23.6H13.4Z"
 
 export function Mark({ className, title }: { className?: string; title?: string }) {
   return (
@@ -22,7 +25,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2 text-foreground", className)}>
       <Mark className="size-7 text-primary" />
-      <span className="text-[1.3rem] leading-none font-extrabold tracking-[-0.03em]">GatePay</span>
+      <span className="font-mono text-[1.2rem] leading-none font-bold tracking-[-0.04em]">GatePay</span>
     </span>
   )
 }

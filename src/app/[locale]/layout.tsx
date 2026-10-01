@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Bricolage_Grotesque, IBM_Plex_Mono } from "next/font/google"
+import { Inter, JetBrains_Mono } from "next/font/google"
 import { notFound } from "next/navigation"
 
 import "../globals.css"
@@ -12,17 +12,17 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { isLocale, locales, SITE_URL } from "@/i18n/config"
 import { getDictionary } from "@/i18n"
 
-const bricolage = Bricolage_Grotesque({
+/* Two families: JetBrains Mono for headings, labels, codes and amounts; Inter for reading. */
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-bricolage",
+  variable: "--font-inter",
   display: "swap",
 })
 
-const plexMono = IBM_Plex_Mono({
+const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex-mono",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-jetbrains",
   display: "swap",
 })
 
@@ -53,8 +53,8 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f1e8" },
-    { media: "(prefers-color-scheme: dark)", color: "#111614" },
+    { media: "(prefers-color-scheme: light)", color: "#f1f9f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#041213" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -66,7 +66,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   const dict = getDictionary(locale)
 
   return (
-    <html lang={locale} className={`${bricolage.variable} ${plexMono.variable}`} suppressHydrationWarning>
+    <html lang={locale} className={`${inter.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
           <TooltipProvider delayDuration={200}>

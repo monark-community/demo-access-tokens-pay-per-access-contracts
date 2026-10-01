@@ -4,10 +4,10 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
-/* Re-themed for GatePay: 6px hardware radius, semibold labels, a thin
-   "plate" edge on the primary action instead of a soft shadow. */
+/* Re-themed for GatePay: 6px hardware radius, mono semibold labels (a lock's
+   display), a thin edge on the primary action instead of a soft shadow. */
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent text-sm font-semibold whitespace-nowrap transition-[background-color,color,border-color,transform] duration-150 outline-none select-none focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent font-mono text-sm font-semibold tracking-[-0.01em] whitespace-nowrap transition-[background-color,color,border-color,transform] duration-150 outline-none select-none focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -18,7 +18,7 @@ const buttonVariants = cva(
         ghost: "text-foreground hover:bg-muted aria-expanded:bg-muted",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive/40",
-        brass: "bg-stub text-stub-foreground plate-edge hover:bg-[color-mix(in_oklab,var(--stub),var(--foreground)_8%)]",
+        key: "bg-key text-key-foreground plate-edge hover:bg-[color-mix(in_oklab,var(--key),var(--foreground)_8%)]",
         link: "h-auto px-0 text-primary underline decoration-1 underline-offset-4 hover:decoration-2",
       },
       size: {

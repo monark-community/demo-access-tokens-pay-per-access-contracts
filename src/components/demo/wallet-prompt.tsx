@@ -12,7 +12,7 @@ import { useApp } from "./app-provider"
 
 /**
  * The simulated wallet's signature window. Every connection and transaction
- * passes through it; closing it counts as a rejection.
+ * keys through it; closing it counts as a rejection.
  */
 export function WalletPrompt() {
   const { dict } = useApp()

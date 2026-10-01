@@ -1,5 +1,5 @@
-import { PassesView } from "@/components/demo/passes-view"
+import { KeysView } from "@/components/demo/keys-view"
 
-export default function PassesPage() {
-  return <PassesView />
+export default function KeysPage() {
+  return <KeysView />
 }

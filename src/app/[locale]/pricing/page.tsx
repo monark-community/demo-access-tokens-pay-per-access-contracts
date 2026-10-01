@@ -26,7 +26,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 md:py-16">
-      <p className="inline-flex rounded-full border border-dashed border-brass px-3 py-1 font-mono text-xs text-brass">{p.internal}</p>
+      <p className="inline-flex rounded-full border border-dashed border-primary px-3 py-1 font-mono text-xs text-primary">{p.internal}</p>
       <h1 className="mt-4 text-4xl font-extrabold tracking-[-0.035em] sm:text-5xl">{p.title}</h1>
       <p className="mt-4 max-w-2xl text-lg text-muted-foreground">{p.intro}</p>
 
@@ -40,7 +40,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
                 <span className="font-mono text-3xl font-semibold">{plan.price}</span>
                 {plan.price.match(/\d/) && <span className="text-sm text-muted-foreground">{p.perMonth}</span>}
               </p>
-              <p className="mt-1 font-mono text-sm text-brass">{t(p.fee, { fee: plan.fee })}</p>
+              <p className="mt-1 font-mono text-sm text-primary">{t(p.fee, { fee: plan.fee })}</p>
             </div>
             <ul className="flex-1 space-y-2.5 p-5 text-sm">
               {plan.features.map((f) => (
@@ -77,7 +77,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
                   </th>
                   <td className="px-4 py-2.5 font-mono">{r.open}</td>
                   <td className="px-4 py-2.5 font-mono text-primary">{r.venue}</td>
-                  <td className="px-4 py-2.5 font-mono text-rust">{r.card}</td>
+                  <td className="px-4 py-2.5 font-mono text-muted-foreground">{r.card}</td>
                 </tr>
               ))}
             </tbody>
@@ -92,7 +92,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
         <ul className="mt-4 space-y-3">
           {p.why.items.map((x) => (
             <li key={x} className="flex gap-3 border-b border-dashed pb-3">
-              <span aria-hidden="true" className="font-mono text-brass">
+              <span aria-hidden="true" className="font-mono text-primary">
                 —
               </span>
               {x}

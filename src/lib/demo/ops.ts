@@ -1,11 +1,12 @@
 "use client"
 
 import { handshake, read } from "./chain"
-import { blockAt, normaliseCode, randomAddress, randomPassCode } from "./ids"
-import { KIND_ACTION, KIND_HOOK, extendPass, newTerms, verify } from "./rules"
+import { blockAt, normaliseCode, randomAddress, randomKeyCode } from "./ids"
+import { KIND_ACTION, KIND_HOOK, extendKey, newTerms, verify } from "./rules"
+import { OPERATOR_ID } from "./seed"
 import { demoNow, getDemo, requestPrompt, update } from "./store"
 import { NETWORK_FEE_ETH, roundToken } from "./tokens"
-import type { DenyReason, DemoState, Gate, LogEvent, Pass, Rule, TokenSymbol, TxResult } from "./types"
+import type { DenyReason, DemoState, Gate, LogEvent, AccessKey, Rule, TokenSymbol, TxResult } from "./types"
 
 /**
  * State transitions of the demo. Each one is what a confirmed transaction or
@@ -47,7 +48,7 @@ export function topUp(token: TokenSymbol, amount: number) {
 
 /* Buying ------------------------------------------------------------------ */
 
-/** Record a confirmed purchase (or renewal of `renewCode`). Returns the pass code. */
+/** Record a confirmed purchase (or renewal of `renewCode`). Returns the key code. */
 export function applyPurchase(gateId: string, units: number, tx: TxResult, renewCode?: string): string | null {
   const s = getDemo()
   const gate = s?.gates.find((g) => g.id === gateId)
@@ -58,18 +59,18 @@ export function applyPurchase(gateId: string, units: number, tx: TxResult, renew
   let code = renewCode ?? ""
 
   update((st) => {
-    let passes = st.passes
+    let keys = st.keys
     let event: LogEvent
-    const existing = renewCode ? st.passes.find((p) => p.code === renewCode) : undefined
+    const existing = renewCode ? st.keys.find((p) => p.code === renewCode) : undefined
     if (existing) {
-      const terms = extendPass(existing, gate.rule, units, now)
-      passes = st.passes.map((p) =>
+      const terms = extendKey(existing, gate.rule, units, now)
+      keys = st.keys.map((p) =>
         p.code === existing.code ? { ...p, ...terms, units: p.units + units, paid: roundToken(p.paid + cost, p.token) } : p
       )
       event = { id: evId(), at: now, gateId, type: "renewal", code: existing.code, holder, amount: cost, token: gate.rule.token, units, block: tx.block }
     } else {
-      code = randomPassCode()
-      const pass: Pass = {
+      code = randomKeyCode()
+      const key: AccessKey = {
         tokenId: st.nextTokenId,
         code,
         gateId,
@@ -81,7 +82,7 @@ export function applyPurchase(gateId: string, units: number, tx: TxResult, renew
         ...newTerms(gate.rule, units, now),
         txHash: tx.hash,
       }
-      passes = [pass, ...st.passes]
+      keys = [key, ...st.keys]
       event = { id: evId(), at: now, gateId, type: "payment", code, holder, amount: cost, token: gate.rule.token, units, block: tx.block }
     }
     const balances = payFee({
@@ -91,7 +92,7 @@ export function applyPurchase(gateId: string, units: number, tx: TxResult, renew
     return withLog(
       {
         ...st,
-        passes,
+        keys,
         nextTokenId: existing ? st.nextTokenId : st.nextTokenId + 1,
         wallet: { ...st.wallet, balances },
         expiryLogged: existing ? st.expiryLogged.filter((c) => c !== existing.code) : st.expiryLogged,
@@ -103,40 +104,40 @@ export function applyPurchase(gateId: string, units: number, tx: TxResult, renew
   return code
 }
 
-/* Checking a pass at the gateway ----------------------------------------- */
+/* Checking a key at the gateway ----------------------------------------- */
 
 export type CheckResult =
-  | { ok: true; pass: Pass; block: number; ms: number }
-  | { ok: false; reason: DenyReason; pass?: Pass; block: number }
+  | { ok: true; key: AccessKey; block: number; ms: number }
+  | { ok: false; reason: DenyReason; key?: AccessKey; block: number }
 
 /**
- * The gateway: read the pass on-chain, refuse with a reason, or record the use
+ * The gateway: read the key on-chain, refuse with a reason, or record the use
  * and perform the gate's action. `consume` is false for a dry check at the door.
  */
-export async function checkPass(gateId: string, rawCode: string, opts: { consume?: boolean } = {}): Promise<CheckResult> {
+export async function checkKey(gateId: string, rawCode: string, opts: { consume?: boolean } = {}): Promise<CheckResult> {
   const { block } = await read()
   const s = getDemo()
   const now = demoNow()
   const code = normaliseCode(rawCode)
   const gate = s?.gates.find((g) => g.id === gateId)
-  const pass = s?.passes.find((p) => p.code === code)
-  const verdict = verify(gate, pass, now)
+  const key = s?.keys.find((p) => p.code === code)
+  const verdict = verify(gate, key, now)
 
   if (!verdict.ok || !gate) {
     const reason = verdict.ok ? "unknown" : verdict.reason
     update((st) => withLog(st, { id: evId(), at: now, gateId, type: "denied", code, reason }))
-    return { ok: false, reason, pass: verdict.ok ? undefined : verdict.pass, block }
+    return { ok: false, reason, key: verdict.ok ? undefined : verdict.key, block }
   }
 
   const consume = opts.consume ?? true
   const ms = 80 + Math.floor(Math.random() * 140)
   update((st) => {
-    const passes =
-      consume && verdict.pass.usesLeft !== null
-        ? st.passes.map((p) => (p.code === code ? { ...p, usesLeft: Math.max(0, (p.usesLeft ?? 0) - 1) } : p))
-        : st.passes
+    const keys =
+      consume && verdict.key.usesLeft !== null
+        ? st.keys.map((p) => (p.code === code ? { ...p, usesLeft: Math.max(0, (p.usesLeft ?? 0) - 1) } : p))
+        : st.keys
     const events: LogEvent[] = [
-      { id: evId(), at: now, gateId, type: "check", code, holder: verdict.pass.holder, block },
+      { id: evId(), at: now, gateId, type: "check", code, holder: verdict.key.holder, block },
     ]
     if (consume) {
       const hook = KIND_HOOK[gate.kind]
@@ -152,10 +153,10 @@ export async function checkPass(gateId: string, rawCode: string, opts: { consume
         ms,
       })
     }
-    return withLog({ ...st, passes }, ...events)
+    return withLog({ ...st, keys }, ...events)
   })
-  const fresh = getDemo()?.passes.find((p) => p.code === code) ?? verdict.pass
-  return { ok: true, pass: fresh, block, ms }
+  const fresh = getDemo()?.keys.find((p) => p.code === code) ?? verdict.key
+  return { ok: true, key: fresh, block, ms }
 }
 
 export function postToBoard(code: string, text: string) {
@@ -173,7 +174,7 @@ export function sweepExpiries() {
   const s = getDemo()
   if (!s) return
   const now = demoNow()
-  const due = s.passes.filter((p) => p.expiresAt !== null && p.expiresAt <= now && !s.expiryLogged.includes(p.code))
+  const due = s.keys.filter((p) => p.expiresAt !== null && p.expiresAt <= now && !s.expiryLogged.includes(p.code))
   if (!due.length) return
   update((st) =>
     withLog(
@@ -220,8 +221,9 @@ export function applyPublish(draft: GateDraft, tx: TxResult): string {
       title: draft.title.trim(),
       place: draft.place.trim(),
       description: draft.description.trim(),
-      ownerName: st.operator.name,
+      ownerId: OPERATOR_ID,
       ownerAddress: st.operator.address,
+      photos: [],
       contract: randomAddress(),
       rule: draft.rule,
       webhookUrl: draft.webhookUrl,

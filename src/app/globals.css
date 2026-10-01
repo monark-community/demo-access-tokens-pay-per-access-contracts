@@ -5,14 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * GatePay identity: "brass hardware, punched paper".
- * Paper ground, ink text, verdigris = OPEN / brand, brass = the pass,
- * rust = EXPIRED. See docs/site-plan.md §8 for the contrast table.
+ * GatePay identity: "aquamarine keys".
+ * One hue (aquamarine, h≈172) on cool mint-grey surfaces. Strong aquamarine =
+ * OPEN / your key; dim = LOCKED / spent. Mono for headings, labels and data,
+ * a plain grotesk for reading. See docs/site-plan.md §8 for the contrast table.
  */
 
 @theme inline {
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,12 +47,11 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --color-brass: var(--brass);
-  --color-rust: var(--rust);
-  --color-stub: var(--stub);
-  --color-stub-foreground: var(--stub-foreground);
+  --color-key: var(--key);
+  --color-key-foreground: var(--key-foreground);
   --color-plate: var(--plate);
   --color-plate-foreground: var(--plate-foreground);
+  --color-overlay: var(--overlay);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -62,85 +63,68 @@
 
 :root {
   --radius: 0.375rem;
-  --background: #f4f1e8;
-  --foreground: #1b1f1c;
-  --card: #fbfaf5;
-  --card-foreground: #1b1f1c;
-  --popover: #fbfaf5;
-  --popover-foreground: #1b1f1c;
-  --primary: #0e5a4e;
-  --primary-foreground: #f7f5ee;
-  --secondary: #e8e3d5;
-  --secondary-foreground: #1b1f1c;
-  --muted: #e8e3d5;
-  --muted-foreground: #565b53;
-  --accent: #efdda6;
-  --accent-foreground: #3b2f05;
+  --background: oklch(0.975 0.009 178);
+  --foreground: oklch(0.23 0.025 195);
+  --card: oklch(0.995 0.004 178);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.5 0.095 178);
+  --primary-foreground: oklch(0.99 0.008 178);
+  --secondary: oklch(0.94 0.016 180);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--secondary);
+  --muted-foreground: oklch(0.48 0.025 195);
+  --accent: oklch(0.915 0.045 176);
+  --accent-foreground: oklch(0.3 0.06 182);
   --destructive: #b42318;
   --destructive-foreground: #ffffff;
-  --border: #d3ccb8;
-  --input: #c6bea7;
-  --ring: #0e5a4e;
-  --chart-1: #0e5a4e;
-  --chart-2: #a87b12;
-  --chart-3: #9a4a24;
-  --chart-4: #46687a;
-  --chart-5: #6b7440;
-  --brass: #8a6414;
-  --rust: #9a4a24;
-  --stub: #efdda6;
-  --stub-foreground: #3b2f05;
-  --plate: #1b1f1c;
-  --plate-foreground: #f4f1e8;
-  --sidebar: #fbfaf5;
-  --sidebar-foreground: #1b1f1c;
-  --sidebar-primary: #0e5a4e;
-  --sidebar-primary-foreground: #f7f5ee;
-  --sidebar-accent: #e8e3d5;
-  --sidebar-accent-foreground: #1b1f1c;
-  --sidebar-border: #d3ccb8;
-  --sidebar-ring: #0e5a4e;
+  --border: oklch(0.885 0.018 182);
+  --input: oklch(0.62 0.03 185);
+  --ring: var(--primary);
+  /* The key: an aquamarine surface. Text on it is always --key-foreground. */
+  --key: oklch(0.9 0.07 172);
+  --key-foreground: oklch(0.28 0.06 182);
+  /* LOCKED plates and code blocks: the inverse of the page. */
+  --plate: var(--foreground);
+  --plate-foreground: var(--background);
+  --overlay: oklch(0.2 0.03 195 / 0.55);
+  --chart-1: var(--primary);
+  --chart-2: oklch(0.65 0.09 176);
+  --chart-3: oklch(0.78 0.07 174);
+  --chart-4: oklch(0.4 0.06 186);
+  --chart-5: oklch(0.6 0.02 195);
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--primary);
 }
 
 .dark {
-  --background: #111614;
-  --foreground: #ece8dc;
-  --card: #18201c;
-  --card-foreground: #ece8dc;
-  --popover: #18201c;
-  --popover-foreground: #ece8dc;
-  --primary: #63c7ae;
-  --primary-foreground: #0a1a15;
-  --secondary: #1f2925;
-  --secondary-foreground: #ece8dc;
-  --muted: #1f2925;
-  --muted-foreground: #a3aa9e;
-  --accent: #3a3219;
-  --accent-foreground: #f1d98c;
+  --background: oklch(0.17 0.022 200);
+  --foreground: oklch(0.95 0.018 175);
+  --card: oklch(0.205 0.024 196);
+  --primary: oklch(0.77 0.11 172);
+  --primary-foreground: oklch(0.19 0.035 190);
+  --secondary: oklch(0.255 0.024 194);
+  --muted-foreground: oklch(0.75 0.028 182);
+  --accent: oklch(0.31 0.05 180);
+  --accent-foreground: oklch(0.93 0.05 172);
   --destructive: #f2776b;
   --destructive-foreground: #1a0806;
-  --border: #2e3934;
-  --input: #3b4842;
-  --ring: #63c7ae;
-  --chart-1: #63c7ae;
-  --chart-2: #e2be5c;
-  --chart-3: #e58a62;
-  --chart-4: #8fb3c6;
-  --chart-5: #b5be7e;
-  --brass: #e2be5c;
-  --rust: #e58a62;
-  --stub: #3a3219;
-  --stub-foreground: #f1d98c;
-  --plate: #ece8dc;
-  --plate-foreground: #111614;
-  --sidebar: #18201c;
-  --sidebar-foreground: #ece8dc;
-  --sidebar-primary: #63c7ae;
-  --sidebar-primary-foreground: #0a1a15;
-  --sidebar-accent: #1f2925;
-  --sidebar-accent-foreground: #ece8dc;
-  --sidebar-border: #2e3934;
-  --sidebar-ring: #63c7ae;
+  --border: oklch(0.32 0.024 192);
+  --input: oklch(0.5 0.03 188);
+  --key: oklch(0.3 0.065 176);
+  --key-foreground: oklch(0.92 0.075 170);
+  --overlay: oklch(0.08 0.02 200 / 0.7);
+  --chart-2: oklch(0.62 0.09 174);
+  --chart-3: oklch(0.48 0.07 178);
+  --chart-4: oklch(0.88 0.06 170);
+  --chart-5: oklch(0.55 0.02 190);
 }
 
 @layer base {
@@ -153,11 +137,13 @@
   }
   body {
     @apply bg-background font-sans text-foreground antialiased;
-    font-feature-settings: "ss01" 0;
   }
+  /* Headings are set in the mono: the product reads like a lock's display. */
   h1,
   h2,
   h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
   p {
@@ -170,8 +156,8 @@
     }
   }
   ::selection {
-    background: var(--accent);
-    color: var(--accent-foreground);
+    background: var(--key);
+    color: var(--key-foreground);
   }
 }
 
@@ -183,46 +169,23 @@
   text-transform: uppercase;
 }
 
-@utility perforation-x {
-  /* Dashed tear line, drawn as a border so it inherits the theme. */
-  border-top: 1.5px dashed var(--border);
+/* A faint engineering grid, only behind the hero and the unlock stage. */
+@utility grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-@utility perforation-y {
-  border-left: 1.5px dashed color-mix(in oklab, var(--stub-foreground) 35%, transparent);
-}
-
-/* A ticket: semicircle notches cut on both sides at --notch-at (default middle). */
-@utility ticket {
-  --notch: 9px;
-  --notch-at: 50%;
-  -webkit-mask:
-    radial-gradient(circle var(--notch) at 0 var(--notch-at), #0000 98%, #000) left / 51% 100% no-repeat,
-    radial-gradient(circle var(--notch) at 100% var(--notch-at), #0000 98%, #000) right / 51% 100% no-repeat;
-  mask:
-    radial-gradient(circle var(--notch) at 0 var(--notch-at), #0000 98%, #000) left / 51% 100% no-repeat,
-    radial-gradient(circle var(--notch) at 100% var(--notch-at), #0000 98%, #000) right / 51% 100% no-repeat;
-}
-
-/* Horizontal ticket (stub on the right): notches top and bottom at --notch-at. */
-@utility ticket-h {
-  --notch: 9px;
-  --notch-at: 72%;
-  -webkit-mask:
-    radial-gradient(circle var(--notch) at var(--notch-at) 0, #0000 98%, #000) top / 100% 51% no-repeat,
-    radial-gradient(circle var(--notch) at var(--notch-at) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
-  mask:
-    radial-gradient(circle var(--notch) at var(--notch-at) 0, #0000 98%, #000) top / 100% 51% no-repeat,
-    radial-gradient(circle var(--notch) at var(--notch-at) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
-}
-
-/* Primary buttons sit on a thin "plate" edge rather than a soft shadow. */
+/* Primary buttons sit on a thin edge rather than a soft shadow. */
 @utility plate-edge {
   box-shadow: 0 2px 0 0 color-mix(in oklab, var(--foreground) 55%, transparent);
 }
 
 /* ---------------------------------------------------------------------------
- * Signature motion
+ * Signature motion: the unlock. Mechanical, 120–480ms per beat,
+ * cubic-bezier(.2,.8,.2,1). Everything collapses to a cross-fade under
+ * prefers-reduced-motion (bottom of file).
  * ------------------------------------------------------------------------ */
 
 @keyframes gp-flip {
@@ -240,45 +203,8 @@
   }
 }
 
-@keyframes gp-punch {
-  0% {
-    transform: scale(0);
-  }
-  70% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes gp-chad {
-  0% {
-    transform: translate(0, 0) rotate(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(10px, 46px) rotate(120deg);
-    opacity: 0;
-  }
-}
-
-@keyframes gp-stamp {
-  0% {
-    transform: rotate(-14deg) scale(1.8);
-    opacity: 0;
-  }
-  60% {
-    transform: rotate(-9deg) scale(0.94);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(-10deg) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes gp-print {
+/* Text typed out character by character (key codes, terminal lines). */
+@keyframes gp-type {
   from {
     clip-path: inset(0 100% 0 0);
   }
@@ -298,12 +224,104 @@
   }
 }
 
+/* Beat 2: the key slides into the keyhole. */
+@keyframes gp-key-in {
+  from {
+    transform: translateX(-140%);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Beat 3: it turns a quarter. */
+@keyframes gp-key-turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(90deg);
+  }
+}
+
+/* Beat 3: the shackle lifts. */
+@keyframes gp-shackle {
+  0% {
+    transform: translateY(0);
+  }
+  60% {
+    transform: translateY(-34%);
+  }
+  80% {
+    transform: translateY(-28%);
+  }
+  100% {
+    transform: translateY(-30%);
+  }
+}
+
+/* Refused: the shackle jolts but holds. */
+@keyframes gp-jolt {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-3px, -4%);
+  }
+  40% {
+    transform: translate(3px, 0);
+  }
+  60% {
+    transform: translate(-2px, -2%);
+  }
+  80% {
+    transform: translate(2px, 0);
+  }
+}
+
+/* Beat 4 (digital): the content comes into focus. */
+@keyframes gp-reveal {
+  from {
+    filter: blur(14px) saturate(0.3);
+    opacity: 0.45;
+    transform: scale(1.03);
+  }
+  to {
+    filter: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Beat 4 (physical): the gate leaf swings open. */
 @keyframes gp-swing {
   0% {
     transform: perspective(700px) rotateY(0deg);
   }
   100% {
-    transform: perspective(500px) rotateY(-52deg);
+    transform: perspective(500px) rotateY(-58deg);
+  }
+}
+
+/* A key being minted: a ring of light runs once around it. */
+@keyframes gp-mint {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 55%, transparent);
+    transform: scale(0.97);
+  }
+  60% {
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--primary) 0%, transparent);
+    transform: scale(1.01);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    transform: none;
   }
 }
 
@@ -354,24 +372,33 @@
   animation: gp-flip 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
   transform-origin: center;
 }
-.gp-punch {
-  animation: gp-punch 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.gp-chad {
-  animation: gp-chad 700ms cubic-bezier(0.4, 0, 0.8, 0.6) 120ms both;
-}
-.gp-stamp {
-  animation: gp-stamp 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.gp-print {
-  animation: gp-print 360ms steps(18, end) both;
+.gp-type {
+  animation: gp-type 420ms steps(14, end) both;
 }
 .gp-rise {
   animation: gp-rise 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
+.gp-key-in {
+  animation: gp-key-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.gp-key-turn {
+  animation: gp-key-turn 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.gp-shackle {
+  animation: gp-shackle 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.gp-jolt {
+  animation: gp-jolt 360ms cubic-bezier(0.3, 0.7, 0.4, 1) both;
+}
+.gp-reveal {
+  animation: gp-reveal 560ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
 .gp-swing {
-  animation: gp-swing 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: gp-swing 480ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
   transform-origin: left center;
+}
+.gp-mint {
+  animation: gp-mint 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 .gp-blink {
   animation: gp-blink 1.2s steps(2, end) infinite;
@@ -407,5 +434,28 @@
   .gp-hero-drain {
     animation: none;
     transform: scaleX(0.7);
+  }
+  /* The unlock still changes state, just without the choreography. */
+  .gp-key-in,
+  .gp-key-turn,
+  .gp-shackle,
+  .gp-swing,
+  .gp-jolt,
+  .gp-mint {
+    animation: none !important;
+  }
+  /* ...but they still land in their end state. */
+  .gp-swing {
+    transform: perspective(500px) rotateY(-58deg);
+  }
+  .gp-shackle {
+    transform: translateY(-30%);
+  }
+  .gp-key-turn {
+    transform: rotate(90deg);
+  }
+  .gp-reveal,
+  .gp-type {
+    animation: gp-rise 1ms both !important;
   }
 }

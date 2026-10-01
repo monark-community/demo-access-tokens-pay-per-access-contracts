@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation"
 import { useState, type ReactNode } from "react"
 import { toast } from "sonner"
 
-import { KindIcon } from "@/components/pass/kind-icon"
-import { PassStub } from "@/components/pass/stub"
+import { KindIcon } from "@/components/key/kind-icon"
+import { KeyFace } from "@/components/key/key-face"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -29,7 +29,7 @@ import { TxFeedback } from "./tx-feedback"
 
 type DurationUnit = "minutes" | "hours" | "days"
 const UNIT_MIN: Record<DurationUnit, number> = { minutes: 1, hours: 60, days: 1440 }
-const DEVICE: GateKind[] = ["room", "locker"]
+const DEVICE: GateKind[] = ["court", "room", "locker"]
 
 interface Form {
   kind: GateKind
@@ -324,7 +324,7 @@ export function Composer() {
             {c.preview}
           </h2>
           <div className="mt-3">
-            <PassStub
+            <KeyFace
               kind={form.kind}
               kindLabel={dict.modes[form.mode]}
               title={form.title.trim() || c.namePlaceholder}
@@ -340,11 +340,13 @@ export function Composer() {
               remainingLabel={form.mode === "forever" ? dict.modes.forever : dict.app.stub.left}
               caption={previewOk ? formatAmount(rule.price, rule.token, locale) : "—"}
               share={1}
+              segments={form.mode === "uses" ? { left: Math.max(1, Math.round(Number(form.uses) || 1)), total: Math.max(1, Math.round(Number(form.uses) || 1)) } : undefined}
+              forever={form.mode === "forever"}
               meterLabel={dict.app.stub.preview}
               state={form.mode === "forever" ? "forever" : "active"}
             />
           </div>
-          <p className="mt-4 rounded-md bg-stub p-3 text-sm font-semibold text-stub-foreground">
+          <p className="mt-4 rounded-md bg-key p-3 text-sm font-semibold text-key-foreground">
             {previewOk ? ruleSentence({ rule, kind: form.kind }, dict, locale) : "—"}
           </p>
         </aside>

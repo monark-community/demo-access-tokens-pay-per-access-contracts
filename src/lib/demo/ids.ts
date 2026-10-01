@@ -41,8 +41,8 @@ export function randomHash(rng: Rng = Math.random): string {
   return `0x${pick(HEX, 64, rng)}`
 }
 
-/** Human pass code printed on the stub: GP-4K7Q-2M. */
-export function randomPassCode(rng: Rng = Math.random): string {
+/** Human key code printed on the stub: GP-4K7Q-2M. */
+export function randomKeyCode(rng: Rng = Math.random): string {
   return `GP-${pick(CODE_ALPHABET, 4, rng)}-${pick(CODE_ALPHABET, 2, rng)}`
 }
 
@@ -56,6 +56,17 @@ export function normaliseCode(input: string): string {
   const body = raw.startsWith("GP") ? raw.slice(2) : raw
   if (body.length !== 6) return input.trim().toUpperCase()
   return `GP-${body.slice(0, 4)}-${body.slice(4)}`
+}
+
+/**
+ * The 6-digit PIN a physical gate's keypad accepts for a key, valid while the
+ * key is. Derived from the code and the gate, the way an offline keypad
+ * computes time-bound PINs without a network (illustrative, not a real scheme).
+ */
+export function gatePin(code: string, gateId: string): string {
+  let h = 2166136261
+  for (const ch of `${gateId}:${code}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619)
+  return String((h >>> 0) % 1_000_000).padStart(6, "0")
 }
 
 /** Simulated block height: one block every 12 s. */

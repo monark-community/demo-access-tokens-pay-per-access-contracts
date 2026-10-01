@@ -11,7 +11,8 @@ import type { DemoState, TxSummary } from "./types"
  * means replacing this folder; components only use hooks and ops.
  */
 
-const STORAGE_KEY = "gatepay-demo-v1"
+// v2: keys replace passes, owners and photo sets were added. Older saves are ignored and reseeded.
+const STORAGE_KEY = "gatepay-demo-v2"
 
 let state: DemoState | null = null
 let storageOk = true
@@ -36,7 +37,7 @@ function load(): DemoState | null {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw) as DemoState
-    if (parsed?.version !== 1 || !Array.isArray(parsed.gates) || !Array.isArray(parsed.passes)) return null
+    if (parsed?.version !== 2 || !Array.isArray(parsed.gates) || !Array.isArray(parsed.keys) || !Array.isArray(parsed.owners)) return null
     // A reload never resumes a half-finished connection.
     if (parsed.wallet.status === "connecting") parsed.wallet.status = "disconnected"
     return parsed
