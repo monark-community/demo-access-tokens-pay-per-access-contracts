@@ -5,7 +5,9 @@
   "description": "GatePay: sell access by the hour, the use, or forever with on-chain passes (simulated testnet demo).",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/check-node.mjs",
     "build": "next build",
+    "prestart": "node scripts/check-node.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",

@@ -16,7 +16,7 @@ This repository is the demo site: a Next.js app with a fully simulated wallet an
 
 ## Run it locally
 
-Requires Node 22 and pnpm 10.
+Requires Node 22.23.4 or newer on the 22 line and pnpm 10.
 
 ```bash
 pnpm install
@@ -75,4 +75,4 @@ Stack: Next.js (App Router), TypeScript strict, Tailwind CSS v4, shadcn/ui on th
 
 ## Deploy to Vercel
 
-Import the repository in Vercel and deploy with the framework defaults (Next.js, pnpm detected from `pnpm-lock.yaml`, Node 22 from `engines`). No configuration or environment variables are required; every page prerenders, and gates published inside the demo render on demand.
+Import the repository in Vercel and deploy with the framework defaults (Next.js, pnpm detected from `pnpm-lock.yaml`, Node 22 from `engines`). No configuration or environment variables are required; every page prerenders, and gates published inside the demo render on demand. `pnpm build` and `pnpm start` stop on a Node release exposed to CVE-2026-111497, which is fixed in 22.23.4.
